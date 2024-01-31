@@ -23,8 +23,8 @@ const persMap = {
 export const Pers: FunctionComponent<PersProps> = ({ id, color, role, onClick, cell }) => {
     const pers = persMap[role];
     const hexColor = color === Color.BLACK ? '#111' : '#DDD';
-    const coordX = cell[0] * 100 / 8;
-    const coordY = cell[1] * 100 / 8;
+    const coordX = cell[1] * 100 / 8;
+    const coordY = cell[0] * 100 / 8;
 
     return <div
         className="pers"

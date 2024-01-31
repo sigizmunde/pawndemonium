@@ -23,7 +23,7 @@ export enum Color {
 
 export type Message = {
     id?: string,
-    sender?: { type: string, id: string },
+    sender?: { type: string, id: string } | string,
     message: string,
     arguments?: Object,
 }
