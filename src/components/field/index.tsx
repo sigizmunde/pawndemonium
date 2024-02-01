@@ -1,20 +1,46 @@
-'use client'
+'use client';
 
-import React, { FunctionComponent, ReactNode } from "react"
+import { Position } from '@/types';
+import React, { FunctionComponent, MouseEventHandler, ReactNode } from 'react';
 
 type FieldProps = {
-    id: string,
-    children?: ReactNode,
-}
+  id: string;
+  children?: ReactNode;
+  onCellClick: Function;
+};
 
-export const Field: FunctionComponent<FieldProps> = ({ id, children }) => {
-    return <div className="field">
-        {Array(8).fill(1).map((_, x) =>
-            <div key={x} className="field-row">
-                {Array(8).fill(1).map((__, y) =>
-                    <div key={x + '' + y} className="field-cell" style={{ backgroundColor: (x + y) % 2 ? "#aaa" : "#eee" }} />)
-                }
-            </div>)}
-        {children}
+export const Field: FunctionComponent<FieldProps> = ({
+  id,
+  children,
+  onCellClick,
+}) => {
+  const handleClick = (x: number, y: number) => {
+    onCellClick({ board: id, cell: [x, y] });
+  };
+
+  return (
+    <div className="field">
+      {Array(8)
+        .fill(1)
+        .map((_, y) => (
+          <div key={y} className="field-row">
+            {Array(8)
+              .fill(1)
+              .map((__, x) => (
+                <div
+                  key={x + '' + y}
+                  className="field-cell"
+                  style={{ backgroundColor: (x + y) % 2 ? '#eee' : '#aaa' }}
+                  onClick={() => handleClick(x, y)}
+                >
+                  {' '}
+                  {x} {y}{' '}
+                </div>
+              ))}
+          </div>
+        ))
+        .reverse()}
+      {children}
     </div>
-}
+  );
+};
