@@ -1,18 +1,17 @@
 'use client';
 
-import { Position } from '@/types';
 import React, { FunctionComponent, MouseEventHandler, ReactNode } from 'react';
 
 type FieldProps = {
   id: string;
   children?: ReactNode;
-  onCellClick: Function;
+  onCellClick?: Function;
 };
 
 export const Field: FunctionComponent<FieldProps> = ({
   id,
-  children,
-  onCellClick,
+  children = undefined,
+  onCellClick = () => {},
 }) => {
   const handleClick = (x: number, y: number) => {
     onCellClick({ board: id, cell: [x, y] });

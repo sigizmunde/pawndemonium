@@ -45,6 +45,7 @@ export const Pers: FunctionComponent<PersProps> = ({
         bottom: `${coordY}%`,
         width: '6.25vh',
         height: '6.25vh',
+        zIndex: 1,
       }}
     >
       <button

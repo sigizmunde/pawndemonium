@@ -1,4 +1,5 @@
-import { isEqualPosition } from '@/helpers';
+import { getPossibleMoves } from '@/helpers/figureMoves';
+import { isEqualPosition } from '@/helpers/isEqual';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
 import { Cell, Color, Message, Position } from '@/types';
@@ -48,8 +49,7 @@ export class Controller {
   }
 
   makeAMove(start: Figure | Position, stop: Position | Cell) {
-    const figure =
-      start instanceof Figure ? start : this.findFigureInCell(start);
+    const figure = start instanceof Figure ? start : this.findFigureInCell(start);
     const stopHasBoard = 'board' in stop;
     if (!figure || !(figure.position || stopHasBoard)) {
       return;
@@ -75,6 +75,10 @@ export class Controller {
     figure.move(destination);
     this._moveCount += 1;
     this._nextTurn = this._nextTurn === Color.WHITE ? Color.BLACK : Color.WHITE;
+  }
+
+  getFigureMoves(figure: Figure) {
+    return getPossibleMoves({ boards: this.boards, figure, figures: this.figures });
   }
 
   private _notify(message: Message) {
