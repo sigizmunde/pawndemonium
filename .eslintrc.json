@@ -5,10 +5,7 @@
   },
   "extends": [
     "next/core-web-vitals",
-    "plugin:react/recommended",
-    "airbnb",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:react/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -39,7 +36,7 @@
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "import/prefer-default-export": "off",
-    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    // "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "react/require-default-props": [
       "error",
       {
