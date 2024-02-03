@@ -95,6 +95,7 @@ export default function Home() {
                 role={f.role}
                 cell={f.position!.cell}
                 onFigureClick={handleFigureClick}
+                selected={!!selected && selected.id === f.id}
               />
             ))}
           {highlighted

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { FunctionComponent, MouseEventHandler, ReactNode } from 'react';
+import darkCell from '@/img/darkcell.gif';
+import lightCell from '@/img/lightcell.gif';
 
 type FieldProps = {
   id: string;
@@ -29,7 +31,12 @@ export const Field: FunctionComponent<FieldProps> = ({
                 <div
                   key={x + '' + y}
                   className="field-cell"
-                  style={{ backgroundColor: (x + y) % 2 ? '#eee' : '#aaa' }}
+                  style={{
+                    backgroundColor: '#6d6358',
+                    backgroundImage: `url(${(x + y) % 2 ? darkCell.src : lightCell.src})`,
+                    backgroundSize: 'cover',
+                    imageRendering: 'pixelated',
+                  }}
                   onClick={() => handleClick(x, y)}
                 >
                   {' '}
