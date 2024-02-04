@@ -13,7 +13,15 @@ import { Spot } from '@/components/spot';
 const controller = new Controller();
 const newBoard = new Board({
   id: '0007',
-  space: Array(8).fill(Array(8).fill(true)),
+  space: [[false, false, false, false, true, true, false, true],
+  Array(8).fill(true),
+  Array(8).fill(true),
+  Array(8).fill(true),
+  Array(8).fill(true),
+  Array(8).fill(true),
+  [false, true, false, true, true, true, false, true],
+  [false, false, false, false, true, true, false, false]
+],
 });
 const newBoard2 = new Board({
   id: '0008',
@@ -24,13 +32,13 @@ const pawn1 = new Figure({
   id: 'pawn1',
   role: Role.PAWN,
   color: Color.WHITE,
-  position: { board: '0007', cell: [3, 0] },
+  position: { board: '0008', cell: [3, 7] },
 });
 const pawn2 = new Figure({
   id: 'pawn2',
   role: Role.PAWN,
   color: Color.WHITE,
-  position: { board: '0007', cell: [4, 0] },
+  position: { board: '0008', cell: [4, 6] },
 });
 const blackPawn1 = new Figure({
   id: 'pawn1b',
@@ -42,7 +50,7 @@ const blackPawn2 = new Figure({
   id: 'pawn2b',
   role: Role.PAWN,
   color: Color.BLACK,
-  position: { board: '0008', cell: [4, 6] },
+  position: { board: '0007', cell: [4, 0] },
 });
 const blackQueen = new Figure({
   id: 'q1b',
@@ -104,7 +112,7 @@ export default function Home() {
   return (
     <main className="main">
       {[...controller.boards].reverse().map((b) => (
-        <Field key={b.id} id={b.id} onCellClick={deselect}>
+        <Field key={b.id} id={b.id} matrix={b.space} onCellClick={deselect}>
           {controller.figures
             .filter((f) => f.position?.board === b.id)
             .map((f) => (
