@@ -1,6 +1,6 @@
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
-import { Cell, Move, Position, Role, SpaceMatrix } from '@/types';
+import { Cell, Color, Move, Position, Role, SpaceMatrix } from '@/types';
 import { cellInMatrix } from './cellInMatrix';
 import { isEqualPosition } from './isEqual';
 import { extendBoards, extendedCellToPosition } from './extendBoards';
@@ -15,11 +15,11 @@ export type GetMovesArgs = {
 
 type ArgsWithPosition = GetMovesArgs & { figure: Figure & { position: Position } };
 
-// TODO: color defines direction
 function getPawnMoves({ boards, figure, figures }: ArgsWithPosition): Move[] {
   const moves: Move[] = [];
   const { extendedMatrix, boardIds, extendedCell } = extendBoards({ boards, figure });
-  const possibleCell: Cell = [extendedCell[0], extendedCell[1] + 1];
+  const direction: number = figure.color === Color.WHITE ? -1 : 1;
+  const possibleCell: Cell = [extendedCell[0], extendedCell[1] + direction];
   if (cellInMatrix(possibleCell, extendedMatrix)) {
     const possiblePosition = extendedCellToPosition({
       boardIds,
@@ -31,8 +31,8 @@ function getPawnMoves({ boards, figure, figures }: ArgsWithPosition): Move[] {
     }
   }
   const possibleAttackArray: Cell[] = [
-    [extendedCell[0] - 1, extendedCell[1] + 1],
-    [extendedCell[0] + 1, extendedCell[1] + 1],
+    [extendedCell[0] - 1, extendedCell[1] + direction],
+    [extendedCell[0] + 1, extendedCell[1] + direction],
   ];
   possibleAttackArray.forEach((extCell) => {
     const pos = extendedCellToPosition({
