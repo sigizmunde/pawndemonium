@@ -99,10 +99,12 @@ export default function Home() {
     }
   }, [selected]);
 
+  const deselect = () => setSelected(null);
+
   return (
     <main className="main">
-      {controller.boards.toReversed().map((b) => (
-        <Field key={b.id} id={b.id}>
+      {[...controller.boards].reverse().map((b) => (
+        <Field key={b.id} id={b.id} onCellClick={deselect}>
           {controller.figures
             .filter((f) => f.position?.board === b.id)
             .map((f) => (
