@@ -2,7 +2,7 @@ import { getPossibleMoves } from '@/helpers/getPossibleMoves';
 import { isEqualPosition } from '@/helpers/isEqual';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
-import { Cell, Color, Message, Position } from '@/types';
+import { Cell, Color, Level, Message, Position } from '@/types';
 
 export class Controller {
   private _nextTurn: Color = Color.WHITE;
@@ -11,6 +11,8 @@ export class Controller {
   private _fieldLength = 2;
   boards: Board[] = [];
   figures: Figure[] = [];
+  levels: Level[] = [];
+  private _level = 0;
   private _onEvent: Function | undefined;
 
   constructor(onEvent?: Function) {
@@ -19,6 +21,14 @@ export class Controller {
     }
     this._onEvent = this._onEvent || onEvent;
     return this._instance;
+  }
+
+  get moveCount() {
+    return this._moveCount;
+  }
+
+  get nextTurn() {
+    return this._nextTurn;
   }
 
   setFieldLength(l: number) {
@@ -79,6 +89,22 @@ export class Controller {
 
   getFigureMoves(figure: Figure) {
     return getPossibleMoves({ boards: this.boards, figure, figures: this.figures });
+  }
+
+  loadLevel(index?: number) {
+    console.log(this.levels);
+    if (!index) {
+      index = this._level + 1;
+    }
+    if (!this.levels?.length) {
+      return;
+    }
+    if (this.levels.length - 1 < index) {
+      index = 0;
+    }
+    this.boards.push(...this.levels[index].boards);
+    this.figures.push(...this.levels[index].figures);
+    this._level = index;
   }
 
   private _notify(message: Message) {

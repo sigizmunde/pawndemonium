@@ -1,3 +1,6 @@
+import { Board } from '@/model/board';
+import { Figure } from '@/model/figure';
+
 export type Position = {
   board: string;
   cell: Cell;
@@ -31,6 +34,8 @@ enum Offset {
 }
 
 export type Direction = [Offset, Offset];
+
+export type Level = { boards: Board[]; figures: Figure[]; objectives?: string };
 
 export type Message = {
   id?: string;
