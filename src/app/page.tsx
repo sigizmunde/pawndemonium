@@ -47,8 +47,8 @@ const blackPawn1 = new Figure({
   position: { board: '0007', cell: [3, 7] },
 });
 const blackPawn2 = new Figure({
-  id: 'pawn2b',
-  role: Role.PAWN,
+  id: 'kingb',
+  role: Role.KING,
   color: Color.BLACK,
   position: { board: '0007', cell: [4, 0] },
 });
@@ -65,8 +65,8 @@ const blackRook = new Figure({
   position: { board: '0007', cell: [0, 7] },
 });
 const whiteBishop = new Figure({
-  id: 'bishop1w',
-  role: Role.BISHOP,
+  id: 'knight1w',
+  role: Role.KNIGHT,
   color: Color.WHITE,
   position: { board: '0008', cell: [4, 2] },
 });

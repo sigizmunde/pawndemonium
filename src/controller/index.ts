@@ -1,4 +1,4 @@
-import { getPossibleMoves } from '@/helpers/figureMoves';
+import { getPossibleMoves } from '@/helpers/getPossibleMoves';
 import { isEqualPosition } from '@/helpers/isEqual';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';

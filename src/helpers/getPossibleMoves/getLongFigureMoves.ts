@@ -1,18 +1,15 @@
-import { Cell, Move, Position, Role } from '@/types';
-import { cellInMatrix } from './cellInMatrix';
-import { Figure } from '@/model/figure';
-import { Board } from '@/model/board';
-import { extendBoards, extendedCellToPosition } from './extendBoards';
-import { isEqualPosition } from './isEqual';
-import { getFigureCost } from './getFigureCost';
+import { Move, Role } from '@/types';
+import { cellInMatrix } from '../cellInMatrix';
+import { extendBoards, extendedCellToPosition } from '../extendBoards';
+import { isEqualPosition } from '../isEqual';
+import { getFigureCost } from '../getFigureCost';
+import { ArgsWithPosition } from '.';
 
-type WLFunctionProps = {
-  figure: Figure & { position: Position };
-  boards: Board[];
-  figures: Figure[];
-};
-
-export function watchLines({ figure, boards, figures }: WLFunctionProps): Move[] {
+export function getLongFigureMoves({
+  figure,
+  boards,
+  figures,
+}: ArgsWithPosition): Move[] {
   const directions = (() => {
     switch (figure?.role) {
       case Role.BISHOP:
