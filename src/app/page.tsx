@@ -2,7 +2,7 @@
 
 import './page.scss';
 import { Field } from '@/components/field';
-import { Color, Position, Role } from '@/types';
+import { Color, Move, Position, Role } from '@/types';
 import { Pers } from '@/components/pers';
 import { Controller } from '@/controller';
 import { Board } from '@/model/board';
@@ -50,11 +50,29 @@ const blackQueen = new Figure({
   color: Color.BLACK,
   position: { board: '0008', cell: [3, 4] },
 });
-controller.figures = [pawn1, pawn2, blackQueen, blackPawn1, blackPawn2];
+const blackRook = new Figure({
+  id: 'rook1b',
+  role: Role.ROOK,
+  color: Color.BLACK,
+  position: { board: '0007', cell: [0, 7] },
+});
+const whiteBishop = new Figure({
+  id: 'bishop1w',
+  role: Role.BISHOP,
+  color: Color.WHITE,
+  position: { board: '0008', cell: [4, 2] },
+});
+const blackBishop = new Figure({
+  id: 'bishop1b',
+  role: Role.BISHOP,
+  color: Color.BLACK,
+  position: { board: '0008', cell: [3, 0] },
+});
+controller.figures = [pawn1, pawn2, blackQueen, blackPawn1, blackPawn2, blackRook, whiteBishop, blackBishop];
 
 export default function Home() {
   const [selected, setSelected] = useState<Figure | null>(null);
-  const [highlighted, setHighlighted] = useState<Position[]>([]);
+  const [highlighted, setHighlighted] = useState<Move[]>([]);
 
   useEffect(() => {
     console.log(highlighted);
@@ -99,9 +117,9 @@ export default function Home() {
               />
             ))}
           {highlighted
-            .filter((s) => s.board === b.id)
+            .filter((s) => s.position.board === b.id)
             .map((s, i) => (
-              <Spot key={i} cell={s.cell} onSpotClick={() => handleCellClick(s)} />
+              <Spot key={i} cell={s.position.cell} onSpotClick={() => handleCellClick(s.position)} />
             ))}
         </Field>
       ))}
