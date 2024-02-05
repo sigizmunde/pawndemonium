@@ -17,7 +17,7 @@ export function getPawnMoves({ boards, figure, figures }: ArgsWithPosition): Mov
     });
     if (!figures.find((f) => isEqualPosition(f.position, possiblePosition))) {
       // if cell ahead is empty
-      moves.push({ position: possiblePosition, points: 0 });
+      moves.push({ position: possiblePosition, points: 0, kills: null });
     }
   }
   const possibleAttackArray: Cell[] = [
@@ -34,7 +34,7 @@ export function getPawnMoves({ boards, figure, figures }: ArgsWithPosition): Mov
     );
     if (enemy) {
       // if cell is occupied by an enemy
-      moves.push({ position: pos, points: getFigureCost(enemy) });
+      moves.push({ position: pos, points: getFigureCost(enemy), kills: enemy });
     }
   });
 

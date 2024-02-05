@@ -3,6 +3,7 @@ import { isEqualPosition } from '@/helpers/isEqual';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
 import { Cell, Color, Level, Message, Position } from '@/types';
+import { estimate } from './estimate';
 
 export class Controller {
   private _nextTurn: Color = Color.WHITE;
@@ -107,6 +108,20 @@ export class Controller {
     this.boards.push(...this.levels[index].boards);
     this.figures.push(...this.levels[index].figures);
     this._level = index;
+    this.onUpdate(this._moveCount);
+  }
+
+  makeAResponse() {
+    const estimation = estimate({
+      figures: this.figures,
+      boards: this.boards,
+      color: this._nextTurn,
+      depth: 4, // never go higher than 5
+    });
+    estimation.sort((a, b) => b.move.points - a.move.points);
+    const theFigure = estimation[0].figure;
+    const theMove = estimation[0].move;
+    this.makeAMove(theFigure, theMove.position);
   }
 
   private _notify(message: Message) {

@@ -42,7 +42,11 @@ export function getKnightOrKingMoves({
     const pos = extendedCellToPosition({ boardIds, extendedCell: possibleCell });
     const occupied = figures.find((f) => isEqualPosition(f.position, pos));
     if (occupied?.color !== figure.color) {
-      result.push({ position: pos, points: getFigureCost(occupied) });
+      result.push({
+        position: pos,
+        points: getFigureCost(occupied),
+        kills: occupied || null,
+      });
     }
     return result;
   }, []);

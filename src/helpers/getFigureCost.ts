@@ -7,13 +7,13 @@ export function getFigureCost(figure: Figure | undefined) {
       return 1;
     case Role.KNIGHT:
     case Role.BISHOP:
-      return 3.5;
+      return 3;
     case Role.ROOK:
-      return 6;
+      return 5;
     case Role.QUEEN:
-      return 10;
+      return 9;
     case Role.KING:
-      return 100;
+      return 200;
     default:
       return 0;
   }

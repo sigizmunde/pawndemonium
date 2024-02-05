@@ -8,7 +8,7 @@ export type Position = {
 
 export type Cell = [number, number];
 
-export type Move = { position: Position; points: number };
+export type Move = { position: Position; points: number; kills: null | Figure };
 export type MoveCell = { cell: Cell; points: number };
 
 export type SpaceMatrix = boolean[][];
@@ -36,6 +36,14 @@ enum Offset {
 export type Direction = [Offset, Offset];
 
 export type Level = { boards: Board[]; figures: Figure[]; objectives?: string };
+
+export type EstimatedMove = {
+  figure: Figure;
+  move: Move;
+  evaluation: number;
+  estimation: Estimation;
+};
+export type Estimation = EstimatedMove[];
 
 export type Message = {
   id?: string;
