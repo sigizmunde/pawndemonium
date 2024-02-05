@@ -14,6 +14,7 @@ export class Controller {
   levels: Level[] = [];
   private _level = 0;
   private _onEvent: Function | undefined;
+  onUpdate: Function = () => {};
 
   constructor(onEvent?: Function) {
     if (!this._instance) {
@@ -85,6 +86,7 @@ export class Controller {
     figure.move(destination);
     this._moveCount += 1;
     this._nextTurn = this._nextTurn === Color.WHITE ? Color.BLACK : Color.WHITE;
+    this.onUpdate(this._moveCount);
   }
 
   getFigureMoves(figure: Figure) {

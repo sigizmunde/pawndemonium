@@ -5,7 +5,7 @@ import { Move, Position } from '@/types';
 import { Pers } from '@/components/pers';
 
 import { Figure } from '@/model/figure';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Spot } from '@/components/spot';
 import { Controller } from '@/controller';
 import { levels } from '@/levels';
@@ -13,6 +13,15 @@ import { levels } from '@/levels';
 export default function Game({ controller }: { controller: Controller }) {
   const [selected, setSelected] = useState<Figure | null>(null);
   const [highlighted, setHighlighted] = useState<Move[]>([]);
+  const [counter, setCounter] = useState<number>(0);
+
+  const handleUpdate = useCallback((tick: number) => {
+    setCounter(tick);
+  }, [setCounter]);
+
+  useEffect(() => {
+    controller.onUpdate = handleUpdate;
+  }, [controller, handleUpdate])
 
   useEffect(() => {
     if (controller.levels.length < 1) {
@@ -72,6 +81,7 @@ export default function Game({ controller }: { controller: Controller }) {
             ))}
         </Field>
       ))}
+      <button type='button' onClick={() => controller.makeAResponse()}>Move {counter}</button>
     </main>
   );
 }
