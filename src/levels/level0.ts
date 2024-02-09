@@ -67,6 +67,13 @@ const whiteQueen = new Figure({
   position: { board: 'l0b1', cell: [7, 2] },
 });
 
+const whiteRook = new Figure({
+  id: 'rook1w',
+  role: Role.ROOK,
+  color: Color.WHITE,
+  position: { board: 'l0b1', cell: [6, 2] },
+});
+
 const blackRook = new Figure({
   id: 'rook1b',
   role: Role.ROOK,
@@ -85,7 +92,7 @@ const blackBishop = new Figure({
   id: 'bishop1b',
   role: Role.BISHOP,
   color: Color.BLACK,
-  position: { board: 'l0b1', cell: [3, 0] },
+  position: { board: 'l0b1', cell: [1, 0] },
 });
 
 level.figures = [
@@ -93,6 +100,7 @@ level.figures = [
   pawn2,
   blackQueen,
   whiteQueen,
+  whiteRook,
   blackPawn1,
   blackKing,
   blackRook,
