@@ -40,7 +40,7 @@ export type Level = { boards: Board[]; figures: Figure[]; objectives?: string };
 export type EstimatedMove = {
   figure: Figure;
   move: Move;
-  evaluation: number;
+  prohibited?: boolean;
   estimation: Estimation;
 };
 export type Estimation = EstimatedMove[];

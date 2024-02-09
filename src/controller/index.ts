@@ -6,9 +6,10 @@ import { Cell, Color, Level, Message, Position } from '@/types';
 import { estimate } from './estimate';
 
 export class Controller {
+  private _instance?: Controller;
+  private _gameOver = false;
   private _nextTurn: Color = Color.WHITE;
   private _moveCount = 0;
-  private _instance?: Controller;
   private _fieldLength = 2;
   boards: Board[] = [];
   figures: Figure[] = [];
@@ -23,6 +24,10 @@ export class Controller {
     }
     this._onEvent = this._onEvent || onEvent;
     return this._instance;
+  }
+
+  get gameOver() {
+    return this._gameOver;
   }
 
   get moveCount() {
@@ -118,6 +123,10 @@ export class Controller {
       color: this._nextTurn,
       depth: 4, // never go higher than 5
     });
+    if (!estimation) {
+      this._gameOver = true;
+      return;
+    }
     estimation.sort((a, b) => b.move.points - a.move.points);
     const theFigure = estimation[0].figure;
     const theMove = estimation[0].move;
