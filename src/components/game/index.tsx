@@ -1,7 +1,7 @@
 'use client';
 
 import { Field } from '@/components/field';
-import { Move, Position } from '@/types';
+import { Color, Move, Position } from '@/types';
 import { Pers } from '@/components/pers';
 
 import { Figure } from '@/model/figure';
@@ -14,6 +14,20 @@ export default function Game({ controller }: { controller: Controller }) {
   const [selected, setSelected] = useState<Figure | null>(null);
   const [highlighted, setHighlighted] = useState<Move[]>([]);
   const [counter, setCounter] = useState<number>(0);
+  const { gameOver, nextTurn } = controller;
+
+  useEffect(() => {
+    if (controller.boards.length > 0
+      && controller.figures.length > 0 
+      && nextTurn === Color.WHITE) {
+        const handler = setTimeout(()=>{
+            controller.makeAResponse();
+        }, 350);
+        return (() => {
+          clearTimeout(handler);
+        })
+    }
+  }, [nextTurn, controller]);
 
   const handleUpdate = useCallback((tick: number) => {
     setCounter(tick);
@@ -39,7 +53,9 @@ export default function Game({ controller }: { controller: Controller }) {
 
   const handleFigureClick = (id: string) => {
     const figure = controller.figures.find((f) => f.id === id);
-    setSelected(figure || null);
+    if (figure?.color === nextTurn) {
+      setSelected(figure || null);
+    }
   };
 
   useEffect(() => {
@@ -81,7 +97,7 @@ export default function Game({ controller }: { controller: Controller }) {
             ))}
         </Field>
       ))}
-      <button type='button' onClick={() => controller.makeAResponse()}>Move {counter}</button>
+      { gameOver && <div className='game-over'> Game Over: { nextTurn === Color.BLACK ? 'Whites' : 'Blacks' } win!</div>}
     </main>
   );
 }
