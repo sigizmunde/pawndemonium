@@ -1,4 +1,5 @@
 import { getPossibleMoves } from '@/helpers/getPossibleMoves';
+import { mockTheMove } from '@/helpers/mockTheMove';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
 import { Color, EstimatedMove, Estimation, Move, Role } from '@/types';
@@ -51,17 +52,7 @@ export function estimate({
   if (depth > 0) {
     estimation.reduce<Estimation>((accumulator, { figure, move }) => {
       // perform a potential move -- change a set of figures and positions
-      const newFigure = new Figure({
-        id: figure.id,
-        role: figure.role,
-        color: figure.color,
-        position: move.position,
-      });
-      const newFigures = figures.filter(
-        (f) => f.id !== figure.id && f.id !== move.kills?.id
-      );
-      newFigures.push(newFigure);
-      const newColor = color === Color.WHITE ? Color.BLACK : Color.WHITE;
+      const { newFigures, newColor } = mockTheMove({ move, figure, figures });
       // get estimation for current estimated move
       const currentEstimation = estimate({
         estimatedMove: move,

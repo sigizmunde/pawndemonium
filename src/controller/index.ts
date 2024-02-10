@@ -2,8 +2,10 @@ import { getPossibleMoves } from '@/helpers/getPossibleMoves';
 import { isEqualPosition } from '@/helpers/isEqual';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
-import { Cell, Color, Level, Message, Position } from '@/types';
+import { Cell, Color, Level, Message, Position, Role } from '@/types';
 import { estimate } from './estimate';
+import { mockTheMove } from '@/helpers/mockTheMove';
+import { getIsUnderAttack } from '@/helpers/getIsUnderAttack';
 
 export class Controller {
   private _instance?: Controller;
@@ -96,7 +98,25 @@ export class Controller {
   }
 
   getFigureMoves(figure: Figure) {
-    return getPossibleMoves({ boards: this.boards, figure, figures: this.figures });
+    return getPossibleMoves({
+      boards: this.boards,
+      figure,
+      figures: this.figures,
+    }).filter((move) => {
+      const { newFigures } = mockTheMove({ move, figure, figures: this.figures });
+      const allyKing = newFigures.find(
+        (f) => f.role === Role.KING && f.color === figure.color
+      );
+      return (
+        !allyKing?.position ||
+        !getIsUnderAttack({
+          position: allyKing.position,
+          figureColor: figure.color,
+          figures: newFigures,
+          boards: this.boards,
+        })
+      );
+    });
   }
 
   loadLevel(index?: number) {
