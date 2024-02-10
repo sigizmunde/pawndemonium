@@ -6,6 +6,16 @@
   padding: 0;
   min-height: 100vh;
 
+  .objectives {
+    position: fixed;
+    top: 6.25vh;
+    right: 6.25vh;
+    width: 35vh;
+    padding: 18px;
+    background-color: black;
+    color: white;
+  }
+
   .game-over {
     position: fixed;
     left: 50%;

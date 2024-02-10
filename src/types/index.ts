@@ -35,7 +35,19 @@ enum Offset {
 
 export type Direction = [Offset, Offset];
 
-export type Level = { boards: Board[]; figures: Figure[]; objectives?: string };
+type ConditionParams = {
+  boards: Board[];
+  figures: Figure[];
+  nextTurn: Color;
+};
+export type Condition = (args: ConditionParams) => boolean;
+export type Level = {
+  boards: Board[];
+  figures: Figure[];
+  objectives?: string;
+  isAccomplished: Condition;
+  isFailed?: Condition;
+};
 
 export type EstimatedMove = {
   figure: Figure;

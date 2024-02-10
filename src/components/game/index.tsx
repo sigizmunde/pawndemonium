@@ -14,33 +14,38 @@ export default function Game({ controller }: { controller: Controller }) {
   const [selected, setSelected] = useState<Figure | null>(null);
   const [highlighted, setHighlighted] = useState<Move[]>([]);
   const [counter, setCounter] = useState<number>(0);
-  const { gameOver, nextTurn } = controller;
+  const { gameStatus, nextTurn } = controller;
 
   useEffect(() => {
-    if (controller.boards.length > 0
-      && controller.figures.length > 0 
-      && nextTurn === Color.WHITE) {
-        const handler = setTimeout(()=>{
-            controller.makeAResponse();
-        }, 350);
-        return (() => {
-          clearTimeout(handler);
-        })
+    if (
+      controller.boards.length > 0 &&
+      controller.figures.length > 0 &&
+      nextTurn === Color.WHITE
+    ) {
+      const handler = setTimeout(() => {
+        controller.makeAResponse();
+      }, 350);
+      return () => {
+        clearTimeout(handler);
+      };
     }
   }, [nextTurn, controller]);
 
-  const handleUpdate = useCallback((tick: number) => {
-    setCounter(tick);
-  }, [setCounter]);
+  const handleUpdate = useCallback(
+    (tick: number) => {
+      setCounter(tick);
+    },
+    [setCounter]
+  );
 
   useEffect(() => {
     controller.onUpdate = handleUpdate;
-  }, [controller, handleUpdate])
+  }, [controller, handleUpdate]);
 
   useEffect(() => {
     if (controller.levels.length < 1) {
-      controller.boards = levels[0].boards;
-      controller.figures = levels[0].figures;
+      controller.levels = [...levels];
+      controller.loadLevel(0);
     }
   }, [controller]);
 
@@ -97,7 +102,12 @@ export default function Game({ controller }: { controller: Controller }) {
             ))}
         </Field>
       ))}
-      { gameOver && <div className='game-over'> Game Over: { nextTurn === Color.BLACK ? 'Whites' : 'Blacks' } win!</div>}
+      <div className="objectives">
+        {gameStatus.status.split('\n').map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
+      </div>
+      {gameStatus.over && <div className="game-over"> {gameStatus.status} </div>}
     </main>
   );
 }

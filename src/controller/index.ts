@@ -9,10 +9,9 @@ import { getIsUnderAttack } from '@/helpers/getIsUnderAttack';
 
 export class Controller {
   private _instance?: Controller;
-  private _gameOver = false;
+  private _gameStatus = { over: false, status: '' };
   private _nextTurn: Color = Color.WHITE;
   private _moveCount = 0;
-  private _fieldLength = 2;
   boards: Board[] = [];
   figures: Figure[] = [];
   levels: Level[] = [];
@@ -28,8 +27,8 @@ export class Controller {
     return this._instance;
   }
 
-  get gameOver() {
-    return this._gameOver;
+  get gameStatus() {
+    return this._gameStatus;
   }
 
   get moveCount() {
@@ -38,13 +37,6 @@ export class Controller {
 
   get nextTurn() {
     return this._nextTurn;
-  }
-
-  setFieldLength(l: number) {
-    if (this.boards.length > l) {
-      return;
-    }
-    this._fieldLength = l;
   }
 
   cellIsAvailable(position: Position) {
@@ -94,6 +86,7 @@ export class Controller {
     figure.move(destination);
     this._moveCount += 1;
     this._nextTurn = this._nextTurn === Color.WHITE ? Color.BLACK : Color.WHITE;
+    this.checkConditions();
     this.onUpdate(this._moveCount);
   }
 
@@ -119,19 +112,72 @@ export class Controller {
     });
   }
 
-  loadLevel(index?: number) {
-    console.log(this.levels);
-    if (!index) {
-      index = this._level + 1;
-    }
-    if (!this.levels?.length) {
+  checkIfFailed() {
+    if (
+      !this.figures
+        .filter((f) => f.color === this.nextTurn)
+        .some((f) => this.getFigureMoves(f).length > 0)
+    ) {
+      this._gameStatus = {
+        over: true,
+        status: `${this.nextTurn === Color.BLACK ? 'You' : 'Your enemy'} may nothing to do`,
+      };
       return;
     }
-    if (this.levels.length - 1 < index) {
-      index = 0;
+    if (
+      this.levels?.[this._level] &&
+      this.levels[this._level].isFailed &&
+      this.levels[this._level].isFailed!({
+        figures: this.figures,
+        boards: this.boards,
+        nextTurn: this.nextTurn,
+      })
+    ) {
+      this._gameStatus = { over: true, status: 'You failed to pass this level' };
+    }
+  }
+
+  checkIfAccomplished(): boolean {
+    if (
+      this.levels?.[this._level] &&
+      this.levels[this._level].isAccomplished({
+        figures: this.figures,
+        boards: this.boards,
+        nextTurn: this.nextTurn,
+      })
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  checkConditions() {
+    if (this.checkIfAccomplished()) {
+      this.boards.shift();
+      if (this._level < this.levels.length) {
+        this.loadLevel();
+      } else {
+        this._gameStatus = {
+          over: true,
+          status: 'Congratulations!\nYou`ve won this race',
+        };
+      }
+    }
+    this.checkIfFailed();
+  }
+
+  loadLevel(index?: number) {
+    console.log(this.levels);
+    if (!index && index !== 0) {
+      index = this._level + 1;
+    }
+    if (!this.levels?.length || this.levels.length - 1 < index) {
+      this._gameStatus = { over: true, status: 'No more levels to play' };
+      return;
     }
     this.boards.push(...this.levels[index].boards);
     this.figures.push(...this.levels[index].figures);
+    this._gameStatus.status = this.levels[index].objectives || '';
     this._level = index;
     this.onUpdate(this._moveCount);
   }
@@ -144,7 +190,7 @@ export class Controller {
       depth: 4, // never go higher than 5
     });
     if (!estimation) {
-      this._gameOver = true;
+      this._gameStatus = { over: true, status: 'This looks like a mate' };
       return;
     }
     estimation.sort((a, b) => b.move.points - a.move.points);

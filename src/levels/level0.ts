@@ -2,7 +2,23 @@ import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
 import { Color, Level, Role } from '@/types';
 
-const level: Level = { boards: [], figures: [] };
+const level: Level = {
+  boards: [],
+  figures: [],
+  objectives:
+    'You found yourselves rushing forward through a dark and long chamber with a bunch of hostile white figures in it.\nGet your King to the top row of the hall whatever it takes.',
+  isAccomplished: ({ boards, figures }) => {
+    if (
+      figures.some(
+        (f) =>
+          f.role === Role.KING && f.position?.board === 'l0b1' && f.position.cell[1] === 7
+      )
+    ) {
+      return true;
+    }
+    return false;
+  },
+};
 
 const newBoard = new Board({
   id: 'l0b0',
