@@ -14,17 +14,17 @@ export type MoveCell = { cell: Cell; points: number };
 export type SpaceMatrix = boolean[][];
 
 export enum Role {
-  PAWN,
-  KNIGHT,
-  BISHOP,
-  ROOK,
-  QUEEN,
-  KING,
+  PAWN = 'pawn',
+  KNIGHT = 'knight',
+  BISHOP = 'bishop',
+  ROOK = 'rook',
+  QUEEN = 'queen',
+  KING = 'king',
 }
 
 export enum Color {
-  BLACK,
-  WHITE,
+  BLACK = 'black',
+  WHITE = 'white',
 }
 
 enum Offset {
