@@ -189,7 +189,7 @@ export class Controller {
       color: this._nextTurn,
       depth: 4, // never go higher than 5
     });
-    if (!estimation) {
+    if (!estimation || estimation.length < 1) {
       this._gameStatus = { over: true, status: 'This looks like a mate' };
       return;
     }
