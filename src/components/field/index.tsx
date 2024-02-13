@@ -42,10 +42,7 @@ export const Field: FunctionComponent<FieldProps> = ({
                     imageRendering: 'pixelated',
                   }}
                   onClick={() => handleClick(x, y)}
-                >
-                  {' '}
-                  {x} {y}{' '}
-                </div>
+                />
               ))}
           </div>
         ))

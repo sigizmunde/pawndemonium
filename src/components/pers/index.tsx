@@ -60,8 +60,8 @@ export const Pers: FunctionComponent<PersProps> = ({
         position: 'absolute',
         left: `${coordX}%`,
         bottom: `${coordY}%`,
-        width: '6.25vh',
-        height: '6.25vh',
+        width: 'var(--cell-size)',
+        height: 'var(--cell-size)',
         zIndex: 1,
         backgroundImage: selected ? `url(${selectedImage.src})` : undefined,
       }}

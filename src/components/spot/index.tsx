@@ -25,8 +25,8 @@ export const Spot: FunctionComponent<SpotProps> = ({
           position: 'absolute',
           left: `${coordX}%`,
           bottom: `${coordY}%`,
-          width: '6.25vh',
-          height: '6.25vh',
+          width: 'var(--cell-size)',
+          height: 'var(--cell-size)',
           zIndex: 2,
         }}
       >

@@ -1,22 +1,65 @@
+@mixin silkscreen-regular {
+  font-family: "Silkscreen", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@mixin silkscreen-bold {
+  font-family: "Silkscreen", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+@mixin press-start-2p {
+  font-family: "Press Start 2P", system-ui;
+  font-size: 1.6rem;
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --cell-size: min(6.25vh, 10vw);
+}
+
 .main {
+  @include silkscreen-regular;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 0;
   min-height: 100vh;
 
   .objectives {
     position: fixed;
-    top: 6.25vh;
-    right: 6.25vh;
+    top: var(--cell-size);
+    right: var(--cell-size);
     width: 35vh;
     padding: 18px;
     background-color: black;
     color: white;
+    z-index: 2;
+
+    @media (max-width: 1023px) {
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      overflow: hidden;
+
+      &:active,
+      &:focus {
+        width: 35vh;
+        height: unset;
+        background-color: black;
+        overflow: unset;
+      }
+    }
   }
 
   .game-over {
+    @include press-start-2p;
+
     position: fixed;
     left: 50%;
     top: 50%;
@@ -24,6 +67,7 @@
     padding: 18px;
     background-color: black;
     color: white;
+    z-index: 2;
   }
 }
 
@@ -34,8 +78,8 @@
   flex-wrap: nowrap;
   font-size: 0.85rem;
   max-width: var(--max-width);
-  width: 50vh;
-  height: 50vh;
+  width: calc(var(--cell-size) * 8);
+  height: calc(var(--cell-size) * 8);
   font-family: var(--font-mono);
   overflow: hidden;
 
@@ -44,12 +88,12 @@
     flex-direction: row;
     gap: 0;
     flex-wrap: nowrap;
-    width: 50vh;
-    height: 6.25vh;
+    width: calc(var(--cell-size) * 8);
+    height: var(--cell-size);
 
     .field-cell {
-      width: 6.25vh;
-      height: 6.25vh;
+      width: var(--cell-size);
+      height: var(--cell-size);
     }
   }
 }
@@ -97,8 +141,8 @@
 
 .stone {
   position: absolute;
-  width: calc(6.25vh * (24 / 20));
-  height: calc(6.25vh * (24 / 20));
+  width: calc(var(--cell-size) * (24 / 20));
+  height: calc(var(--cell-size) * (24 / 20));
   transform: translate(-100% * (2 / 24), 100% * (2 / 24));
   z-index: 2;
 
