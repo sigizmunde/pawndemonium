@@ -6,12 +6,11 @@ const level: Level = {
   boards: [],
   figures: [],
   objectives:
-    'You found yourselves rushing forward through a dark and long chamber with a bunch of hostile white figures in it.\nGet your King to the top row of the hall whatever it takes.',
+    'You are a lonely pawn moving forward.\n_\nHere your journey starts. Move forward!',
   isAccomplished: ({ boards, figures }) => {
     if (
       figures.some(
-        (f) =>
-          f.role === Role.KING && f.position?.board === 'l0b1' && f.position.cell[1] === 7
+        (f) => f.position?.board === 'level0_board1' && f.position.cell[1] === 7
       )
     ) {
       return true;
@@ -21,107 +20,51 @@ const level: Level = {
 };
 
 const newBoard = new Board({
-  id: 'l0b0',
+  id: 'level0_board0',
   space: [
-    [false, false, false, false, true, true, false, true],
+    Array(8).fill(false),
+    Array(8).fill(false),
     Array(8).fill(true),
     Array(8).fill(true),
     Array(8).fill(true),
     Array(8).fill(true),
-    Array(8).fill(true),
-    [false, true, false, true, true, true, false, true],
-    [false, false, false, false, true, true, false, false],
+    Array(8).fill(false),
+    Array(8).fill(false),
   ],
 });
 
 const newBoard2 = new Board({
-  id: 'l0b1',
-  space: Array(8).fill(Array(8).fill(true)),
+  id: 'level0_board1',
+  space: [
+    Array(8).fill(false),
+    Array(8).fill(false),
+    [...Array(3).fill(true), false, ...Array(4).fill(true)],
+    [...Array(3).fill(true), false, ...Array(4).fill(true)],
+    [...Array(4).fill(true), false, ...Array(3).fill(true)],
+    [...Array(4).fill(true), false, ...Array(3).fill(true)],
+    Array(8).fill(false),
+    Array(8).fill(false),
+  ],
+});
+
+const pawn1 = new Figure({
+  id: 'starting_figure',
+  role: Role.PAWN,
+  color: Color.BLACK,
+  position: { board: 'level0_board0', cell: [4, 0] },
 });
 
 level.boards = [newBoard, newBoard2];
-
-const pawn1 = new Figure({
-  id: 'pawn1',
-  role: Role.PAWN,
-  color: Color.WHITE,
-  position: { board: 'l0b1', cell: [3, 7] },
-});
-
-const pawn2 = new Figure({
-  id: 'pawn2',
-  role: Role.PAWN,
-  color: Color.WHITE,
-  position: { board: 'l0b1', cell: [4, 6] },
-});
-
-const blackPawn1 = new Figure({
-  id: 'pawn1b',
-  role: Role.PAWN,
-  color: Color.BLACK,
-  position: { board: 'l0b0', cell: [3, 7] },
-});
-
-const blackKing = new Figure({
-  id: 'kingb',
-  role: Role.KING,
-  color: Color.BLACK,
-  position: { board: 'l0b0', cell: [4, 0] },
-});
-
-const blackQueen = new Figure({
-  id: 'qb',
-  role: Role.QUEEN,
-  color: Color.BLACK,
-  position: { board: 'l0b1', cell: [3, 3] },
-});
-
-const whiteQueen = new Figure({
-  id: 'qw',
-  role: Role.QUEEN,
-  color: Color.WHITE,
-  position: { board: 'l0b1', cell: [7, 2] },
-});
-
-const whiteRook = new Figure({
-  id: 'rook1w',
-  role: Role.ROOK,
-  color: Color.WHITE,
-  position: { board: 'l0b1', cell: [6, 2] },
-});
-
-const blackRook = new Figure({
-  id: 'rook1b',
-  role: Role.ROOK,
-  color: Color.BLACK,
-  position: { board: 'l0b0', cell: [0, 7] },
-});
-
-const whiteKnight = new Figure({
-  id: 'knight1w',
-  role: Role.KNIGHT,
-  color: Color.WHITE,
-  position: { board: 'l0b1', cell: [4, 2] },
-});
-
-const blackBishop = new Figure({
-  id: 'bishop1b',
-  role: Role.BISHOP,
-  color: Color.BLACK,
-  position: { board: 'l0b1', cell: [1, 0] },
-});
-
-level.figures = [
-  pawn1,
-  pawn2,
-  blackQueen,
-  whiteQueen,
-  whiteRook,
-  blackPawn1,
-  blackKing,
-  blackRook,
-  whiteKnight,
-  blackBishop,
+level.figures = [pawn1];
+level.allowSinglePlayer = true;
+level.extraConditions = [
+  ({ boards, figures, nextTurn }) => {
+    figures.forEach((f) => {
+      if (f.role === Role.PAWN && f.position?.cell[1] === 7) {
+        f.role = Role.BISHOP;
+      }
+    });
+  },
 ];
 
 export default level;
