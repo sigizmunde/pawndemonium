@@ -47,6 +47,8 @@ export type Level = {
   objectives?: string;
   isAccomplished: Condition;
   isFailed?: Condition;
+  extraConditions?: ((args: ConditionParams) => void)[];
+  allowSinglePlayer?: boolean;
 };
 
 export type EstimatedMove = {
