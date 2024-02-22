@@ -5,6 +5,7 @@ import darkCell from '@/img/darkcell.gif';
 import lightCell from '@/img/lightcell.gif';
 import { SpaceMatrix } from '@/types';
 import { Stone } from '../stone';
+import './field.scss';
 
 type FieldProps = {
   id: string;

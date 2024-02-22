@@ -34,11 +34,25 @@
 }
 
 .pers-animated {
-    background-image: url('/animations/flare1.gif');
+    position: absolute;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
     background-size: cover;
     image-rendering: pixelated;
     animation: spriteAnimation 0.3s steps(7);
     animation-direction: normal;
+
+    &.step {
+        background-image: url('/animations/flare1.gif');
+    }
+
+    &.transform {
+        background-image: url('/animations/flare2.gif');
+    }
 }
 
 @keyframes spriteAnimation {

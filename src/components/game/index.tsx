@@ -82,7 +82,7 @@ export default function Game({ controller }: { controller: Controller }) {
             .filter((f) => f.position?.board === b.id)
             .map((f) => (
               <Pers
-                key={`${f.id}${f.position?.cell}`}
+                key={f.id}
                 id={f.id}
                 color={f.color}
                 role={f.role}

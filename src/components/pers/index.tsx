@@ -79,16 +79,8 @@ export const Pers: FunctionComponent<PersProps> = ({
           alt={`${colorDescriptor} ${role}`}
         />
         <div
-          className="pers-animated"
-          style={{
-            position: 'absolute',
-            width: 'var(--cell-size)',
-            height: 'var(--cell-size)',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            top: 0,
-          }}
+          key={`${cell}`} // key change triggers animation render
+          className="pers-animated step"
         />
       </button>
     </div>

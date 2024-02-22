@@ -1,0 +1,26 @@
+.field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    font-size: 0.85rem;
+    max-width: var(--max-width);
+    width: calc(var(--cell-size) * 8);
+    height: calc(var(--cell-size) * 8);
+    font-family: var(--font-mono);
+    overflow: hidden;
+
+    .field-row {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        flex-wrap: nowrap;
+        width: calc(var(--cell-size) * 8);
+        height: var(--cell-size);
+
+        .field-cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+        }
+    }
+}

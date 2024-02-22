@@ -2,6 +2,7 @@ import { Cell } from '@/types';
 import Image from 'next/image';
 import { FunctionComponent } from 'react';
 import stoneImage from '@/img/stone.gif';
+import './stone.scss';
 
 export const Stone: FunctionComponent<{ cell: Cell }> = ({ cell }) => {
   const coordX = (cell[0] * 100) / 8;
@@ -15,7 +16,12 @@ export const Stone: FunctionComponent<{ cell: Cell }> = ({ cell }) => {
         bottom: `${coordY}%`,
       }}
     >
-      <Image className="stone-img" src={stoneImage} alt="no way here" style={{transform: `rotate(${(cell[0] + cell[1])*90}deg)`}}/>
+      <Image
+        className="stone-img"
+        src={stoneImage}
+        alt="no way here"
+        style={{ transform: `rotate(${(cell[0] + cell[1]) * 90}deg)` }}
+      />
     </div>
   );
 };
