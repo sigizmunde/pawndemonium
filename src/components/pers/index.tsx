@@ -16,6 +16,7 @@ import wrookImage from '@/img/wrook.gif';
 import wqueenImage from '@/img/wqueen.gif';
 import wkingImage from '@/img/wking.gif';
 import selectedImage from '@/img/select.gif';
+import './pers.scss';
 
 type PersProps = {
   id: string;
@@ -72,7 +73,23 @@ export const Pers: FunctionComponent<PersProps> = ({
         style={{ color: hexColor }}
         onClick={handleClick}
       >
-        <Image className='pers-img' src={pers[colorDescriptor]} alt={`${colorDescriptor} ${role}`}/>
+        <Image
+          className="pers-img"
+          src={pers[colorDescriptor]}
+          alt={`${colorDescriptor} ${role}`}
+        />
+        <div
+          className="pers-animated"
+          style={{
+            position: 'absolute',
+            width: 'var(--cell-size)',
+            height: 'var(--cell-size)',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            top: 0,
+          }}
+        />
       </button>
     </div>
   );

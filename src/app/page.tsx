@@ -1,8 +1,8 @@
 'use client';
 
 import Game from '@/components/game';
-import './page.scss';
 import { Controller } from '@/controller';
+import './page.scss';
 
 const controller = new Controller();
 
