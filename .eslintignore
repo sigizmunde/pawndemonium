@@ -1,3 +1,4 @@
 *.css
 *.svg
 package-lock.json
+public/workers/*
