@@ -75,3 +75,27 @@ export function estimate({
   }
   return estimation;
 }
+
+export function asyncEstimate({
+  estimatedMove,
+  figures,
+  boards,
+  color,
+  depth = 2,
+  // depth < 2 will not give the estimation
+}: Args): Promise<Estimation | null> {
+  return new Promise((resolve, reject) => {
+    try {
+      const estimation = estimate({
+        estimatedMove,
+        figures,
+        boards,
+        color,
+        depth,
+      });
+      resolve(estimation);
+    } catch {
+      reject(null);
+    }
+  });
+}

@@ -2,7 +2,7 @@ import { getPossibleMoves } from '@/helpers/getPossibleMoves';
 import { isEqualPosition } from '@/helpers/isEqual';
 import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
-import { Cell, Color, Level, Message, Position, Role } from '@/types';
+import { Cell, Color, Estimation, Level, Message, Position, Role } from '@/types';
 import { estimate } from './estimate';
 import { mockTheMove } from '@/helpers/mockTheMove';
 import { getIsUnderAttack } from '@/helpers/getIsUnderAttack';
@@ -211,20 +211,53 @@ export class Controller {
   }
 
   makeAResponse() {
+    const afterEstimation = (estimation: Estimation | null) => {
+      if (!estimation || estimation.length < 1) {
+        this._gameStatus = { over: true, status: 'This looks like a mate' };
+        return;
+      }
+      estimation.sort((a, b) => b.move.points - a.move.points);
+      const theFigure = estimation[0].figure;
+      const theMove = estimation[0].move;
+      this.makeAMove(theFigure, theMove.position);
+    };
+
+    // if (window.Worker) {
+    //   const estimationWorker = new Worker(
+    //     new URL('./workers/estimationWorker.ts', import.meta.url)
+    //   );
+
+    //   estimationWorker.onmessage = (e: MessageEvent<Estimation | null>) => {
+    //     console.log('Message received from worker', e.data);
+    //     const result = e.data;
+    //     afterEstimation(result);
+    //     // estimationWorker.terminate();
+    //   };
+
+    //   estimationWorker.postMessage({
+    //     figures: this.figures,
+    //     boards: this.boards,
+    //     color: this._nextTurn,
+    //     depth: 4, // never go higher than 5
+    //   });
+    // } else {
     const estimation = estimate({
+      ...JSON.parse(
+        JSON.stringify({
+          figures: this.figures,
+          boards: this.boards,
+          color: this._nextTurn,
+          depth: 4, // never go higher than 5
+        })
+      ),
+      /**
+       * TODO: make estimate works with deserialized data
+       *  */
       figures: this.figures,
       boards: this.boards,
-      color: this._nextTurn,
-      depth: 4, // never go higher than 5
     });
-    if (!estimation || estimation.length < 1) {
-      this._gameStatus = { over: true, status: 'This looks like a mate' };
-      return;
-    }
-    estimation.sort((a, b) => b.move.points - a.move.points);
-    const theFigure = estimation[0].figure;
-    const theMove = estimation[0].move;
-    this.makeAMove(theFigure, theMove.position);
+    afterEstimation(estimation);
+    // }
   }
 
   private _notify(message: Message) {
