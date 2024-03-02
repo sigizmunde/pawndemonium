@@ -22,12 +22,7 @@ export default function Game({ controller }: { controller: Controller }) {
       controller.figures.length > 0 &&
       nextTurn === Color.WHITE
     ) {
-      const handler = setTimeout(() => {
-        controller.makeAResponse();
-      }, 350);
-      return () => {
-        clearTimeout(handler);
-      };
+      controller.makeAResponse();
     }
   }, [nextTurn, controller]);
 
