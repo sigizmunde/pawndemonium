@@ -6,6 +6,9 @@ import { Cell, Color, Estimation, Level, Message, Position, Role } from '@/types
 import { estimate } from './estimate';
 import { mockTheMove } from '@/helpers/mockTheMove';
 import { getIsUnderAttack } from '@/helpers/getIsUnderAttack';
+import { WorkerOutputMessage, convertOutputMessage } from '@/helpers/convertWorkerData';
+
+const ANALYSIS_DEPTH = 4; // never go higher than 5
 
 export class Controller {
   private _instance?: Controller;
@@ -194,7 +197,6 @@ export class Controller {
   }
 
   loadLevel(index?: number) {
-    console.log(this.levels);
     if (!index && index !== 0) {
       index = this._level + 1;
     }
@@ -217,47 +219,44 @@ export class Controller {
         return;
       }
       estimation.sort((a, b) => b.move.points - a.move.points);
-      const theFigure = estimation[0].figure;
+      const theFigureId = estimation[0].figure.id;
+      const theFigure = this.figures.find(({ id }) => id === theFigureId)!;
       const theMove = estimation[0].move;
       this.makeAMove(theFigure, theMove.position);
     };
 
-    // if (window.Worker) {
-    //   const estimationWorker = new Worker(
-    //     new URL('./workers/estimationWorker.ts', import.meta.url)
-    //   );
+    if (window.Worker) {
+      const estimationWorker = new Worker(
+        new URL('./workers/estimationWorker.ts', import.meta.url)
+      );
 
-    //   estimationWorker.onmessage = (e: MessageEvent<Estimation | null>) => {
-    //     console.log('Message received from worker', e.data);
-    //     const result = e.data;
-    //     afterEstimation(result);
-    //     // estimationWorker.terminate();
-    //   };
+      estimationWorker.onmessage = (e: MessageEvent<WorkerOutputMessage>) => {
+        const result = convertOutputMessage(e.data);
+        console.log(result);
+        afterEstimation(result);
+        // estimationWorker.terminate();
+      };
 
-    //   estimationWorker.postMessage({
-    //     figures: this.figures,
-    //     boards: this.boards,
-    //     color: this._nextTurn,
-    //     depth: 4, // never go higher than 5
-    //   });
-    // } else {
-    const estimation = estimate({
-      ...JSON.parse(
-        JSON.stringify({
+      estimationWorker.postMessage({
+        figures: this.figures,
+        boards: this.boards,
+        color: this._nextTurn,
+        depth: ANALYSIS_DEPTH,
+      });
+    } else {
+      // this is done to let interface finish animations
+      // before estimation function blocks the thread
+      setTimeout(() => {
+        const estimation = estimate({
           figures: this.figures,
           boards: this.boards,
           color: this._nextTurn,
-          depth: 4, // never go higher than 5
-        })
-      ),
-      /**
-       * TODO: make estimate works with deserialized data
-       *  */
-      figures: this.figures,
-      boards: this.boards,
-    });
-    afterEstimation(estimation);
-    // }
+          depth: ANALYSIS_DEPTH,
+        });
+        console.log(estimation);
+        afterEstimation(estimation);
+      }, 350);
+    }
   }
 
   private _notify(message: Message) {
