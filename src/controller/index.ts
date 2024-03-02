@@ -13,7 +13,7 @@ const ANALYSIS_DEPTH = 4; // never go higher than 5
 export class Controller {
   private _instance?: Controller;
   private _gameStatus = { over: false, status: '' };
-  private _nextTurn: Color = Color.WHITE;
+  private _nextTurn: Color = Color.BLACK;
   private _moveCount = 0;
   boards: Board[] = [];
   figures: Figure[] = [];
