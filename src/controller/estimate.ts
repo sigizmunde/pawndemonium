@@ -4,7 +4,7 @@ import { Board } from '@/model/board';
 import { Figure } from '@/model/figure';
 import { Color, EstimatedMove, Estimation, Move, Role } from '@/types';
 
-type Args = {
+export type EstimationArgs = {
   estimatedMove?: Move;
   figures: Figure[];
   boards: Board[];
@@ -19,7 +19,7 @@ export function estimate({
   color,
   depth = 2,
   // depth < 2 will not give the estimation
-}: Args): Estimation | null {
+}: EstimationArgs): Estimation | null {
   depth -= 1;
   const allies = figures.filter((f) => f.color === color);
   const estimation = allies.reduce<Estimation>((est, fig) => {
@@ -74,4 +74,28 @@ export function estimate({
     estimatedMove.points -= maxPoints;
   }
   return estimation;
+}
+
+export function asyncEstimate({
+  estimatedMove,
+  figures,
+  boards,
+  color,
+  depth = 2,
+  // depth < 2 will not give the estimation
+}: EstimationArgs): Promise<Estimation | null> {
+  return new Promise((resolve, reject) => {
+    try {
+      const estimation = estimate({
+        estimatedMove,
+        figures,
+        boards,
+        color,
+        depth,
+      });
+      resolve(estimation);
+    } catch {
+      reject(null);
+    }
+  });
 }

@@ -1,5 +1,4 @@
-import { Cell, Message, SpaceMatrix } from '@/types';
-import { Figure } from './figure';
+import { SpaceMatrix } from '@/types';
 
 export class Board {
   private _id: string;
