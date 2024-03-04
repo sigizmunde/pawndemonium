@@ -3,9 +3,11 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    justify-content: end;
     font-size: 0.85rem;
     max-width: var(--max-width);
     width: calc(var(--cell-size) * 8);
+    min-height: calc(var(--cell-size) * 8);
     height: calc(var(--cell-size) * 8);
     font-family: var(--font-mono);
     overflow: hidden;

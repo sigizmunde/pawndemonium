@@ -1,0 +1,28 @@
+.field-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    max-width: var(--max-width);
+    width: calc(var(--cell-size) * 8);
+    height: calc(var(--cell-size) * 8);
+    overflow: hidden;
+    animation: heightToZero 1s forwards;
+
+    &:nth-child(2n + 1) {
+        justify-content: end;
+    }
+
+    &:nth-child(2n) {
+        justify-content: start;
+    }
+}
+
+@keyframes heightToZero {
+    from {
+        height: 0px;
+    }
+
+    to {
+        height: calc(var(--cell-size) * 8);
+    }
+}

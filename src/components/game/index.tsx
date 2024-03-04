@@ -3,12 +3,12 @@
 import { Field } from '@/components/field';
 import { Color, Move, Position } from '@/types';
 import { Pers } from '@/components/pers';
-
 import { Figure } from '@/model/figure';
 import { useCallback, useEffect, useState } from 'react';
 import { Spot } from '@/components/spot';
 import { Controller } from '@/controller';
 import { levels } from '@/levels';
+import { FieldWrapper } from '@/components/fieldWrapper';
 
 export default function Game({ controller }: { controller: Controller }) {
   const [selected, setSelected] = useState<Figure | null>(null);
@@ -72,30 +72,32 @@ export default function Game({ controller }: { controller: Controller }) {
   return (
     <main className="main">
       {[...controller.boards].reverse().map((b) => (
-        <Field key={b.id} id={b.id} matrix={b.space} onCellClick={deselect}>
-          {...controller.figures
-            .filter((f) => f.position?.board === b.id)
-            .map((f) => (
-              <Pers
-                key={f.id}
-                id={f.id}
-                color={f.color}
-                role={f.role}
-                cell={f.position!.cell}
-                onFigureClick={handleFigureClick}
-                selected={!!selected && selected.id === f.id}
-              />
-            ))}
-          {highlighted
-            .filter((s) => s.position.board === b.id)
-            .map((s, i) => (
-              <Spot
-                key={i}
-                cell={s.position.cell}
-                onSpotClick={() => handleCellClick(s.position)}
-              />
-            ))}
-        </Field>
+        <FieldWrapper key={b.id}>
+          <Field key={b.id} id={b.id} matrix={b.space} onCellClick={deselect}>
+            {...controller.figures
+              .filter((f) => f.position?.board === b.id)
+              .map((f) => (
+                <Pers
+                  key={f.id}
+                  id={f.id}
+                  color={f.color}
+                  role={f.role}
+                  cell={f.position!.cell}
+                  onFigureClick={handleFigureClick}
+                  selected={!!selected && selected.id === f.id}
+                />
+              ))}
+            {highlighted
+              .filter((s) => s.position.board === b.id)
+              .map((s, i) => (
+                <Spot
+                  key={i}
+                  cell={s.position.cell}
+                  onSpotClick={() => handleCellClick(s.position)}
+                />
+              ))}
+          </Field>
+        </FieldWrapper>
       ))}
       <div className="objectives">
         {gameStatus.status.split('\n').map((p, i) => (
