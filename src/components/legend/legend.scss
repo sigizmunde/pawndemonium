@@ -1,0 +1,24 @@
+.legend-wrapper {
+    position: absolute;
+    left: var(--cell-size);
+    top: var(--cell-size);
+    height: calc(7 * var(--cell-size));
+    padding: calc(var(--cell-size) / 2);
+    background-color: #6d6358;
+
+    @media (max-width: 1023px) {
+        left: -200vh;
+    }
+
+    .legend-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .figure-holder {
+        position: relative;
+        height: var(--cell-size);
+        width: var(--cell-size);
+    }
+}
