@@ -1,0 +1,64 @@
+.loader-wrapper {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 2.4vh;
+    background-color: black;
+    padding: 0.6vh;
+    z-index: 12;
+
+    .loader-element {
+        height: 0.6vh;
+        width: 0.6vh;
+        background-color: black;
+        animation: blink 2s infinite;
+
+        &:nth-child(8n+2) {
+            animation-delay: 250ms;
+        }
+
+        &:nth-child(8n+3) {
+            animation-delay: 500ms;
+        }
+
+        &:nth-child(8n+4) {
+            animation-delay: 750ms;
+        }
+
+        &:nth-child(8n+5) {
+            animation-delay: 1000ms;
+        }
+
+        &:nth-child(8n+6) {
+            animation-delay: 1250ms;
+        }
+
+        &:nth-child(8n+7) {
+            animation-delay: 1500ms;
+        }
+
+        &:nth-child(8n+8) {
+            animation-delay: 1750ms;
+        }
+    }
+}
+
+@keyframes blink {
+    0% {
+        background-color: white;
+    }
+
+    49% {
+        background-color: white;
+    }
+
+    50% {
+        background-color: black;
+    }
+
+    100% {
+        background-color: black;
+    }
+}
