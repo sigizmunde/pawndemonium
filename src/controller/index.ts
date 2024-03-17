@@ -232,9 +232,8 @@ export class Controller {
 
       estimationWorker.onmessage = (e: MessageEvent<WorkerOutputMessage>) => {
         const result = convertOutputMessage(e.data);
-        console.log(result);
         afterEstimation(result);
-        // estimationWorker.terminate();
+        estimationWorker.terminate();
       };
 
       estimationWorker.postMessage({
