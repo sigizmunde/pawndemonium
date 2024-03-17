@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './objectives.scss';
 
 export function Objectives({ info = '' }: { info?: string }) {
   const [mobileObjShow, setMobileObjShow] = useState(false);
+
+  useEffect(() => {
+    setMobileObjShow(true);
+  }, [info])
 
   const contents = info.split('\n').map((p, i) => <p key={i}>{p}</p>);
 

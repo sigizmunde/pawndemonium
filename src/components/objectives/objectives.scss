@@ -19,10 +19,12 @@
 .objectives-mobile {
     display: none;
     position: fixed;
-    transition: all;
+    left: 100%;
+    right: unset;
+    transition: all 250ms;
 
-    &.closed {
-        left: 100%;
+    &.open {
+        transform: translate(calc(-100% - var(--cell-size)), 0);
     }
 
     @media (max-width: 1223px) {
