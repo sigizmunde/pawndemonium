@@ -1,28 +1,83 @@
 .field-wrapper {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    max-width: var(--max-width);
-    width: calc(var(--cell-size) * 8);
-    height: calc(var(--cell-size) * 8);
-    overflow: hidden;
-    animation: heightToZero 1s forwards;
+    position: relative;
+
+    .field-inner-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        max-width: var(--max-width);
+        width: calc(var(--cell-size) * 8);
+        height: calc(var(--cell-size) * 8);
+        overflow: hidden;
+        animation: heightFromZero 1s forwards;
+    }
 
     &:nth-child(2n + 1) {
-        justify-content: end;
+        .field-inner-wrapper {
+            justify-content: flex-end;
+        }
     }
 
     &:nth-child(2n) {
-        justify-content: start;
+        .field-inner-wrapper {
+            justify-content: flex-start;
+        }
+    }
+
+    .row-numbers {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: var(--cell-size);
+        height: calc(var(--cell-size) * 8);
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        justify-content: space-around;
+        opacity: 0;
+        animation: opacityFromZero 0.5s forwards 1s;
+
+        &.left {
+            left: calc(-1 * var(--cell-size));
+        }
+
+        &.right {
+            right: calc(-1 * var(--cell-size));
+        }
+
+        .row-num {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--color-secondary);
+            opacity: 0.5;
+
+            &:first-child {
+                opacity: 1;
+            }
+        }
     }
 }
 
-@keyframes heightToZero {
+@keyframes heightFromZero {
     from {
         height: 0px;
     }
 
     to {
         height: calc(var(--cell-size) * 8);
+    }
+}
+
+@keyframes opacityFromZero {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }
