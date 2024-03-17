@@ -1,0 +1,44 @@
+.objectives,
+.objectives-mobile {
+    position: fixed;
+    top: var(--cell-size);
+    right: var(--cell-size);
+    width: 35vh;
+    padding: 18px;
+    background-color: black;
+    color: white;
+    z-index: 2;
+}
+
+.objectives {
+    @media (max-width: 1223px) {
+        display: none;
+    }
+}
+
+.objectives-mobile {
+    display: none;
+    position: fixed;
+    transition: all;
+
+    &.closed {
+        left: 100%;
+    }
+
+    @media (max-width: 1223px) {
+        display: block;
+    }
+
+    button {
+        background-color: black;
+        border: none;
+        border-radius: 3px;
+        color: white;
+        font: inherit;
+        height: 36px;
+        padding: 0 5px 0 0;
+        position: absolute;
+        right: calc(100% - 5px);
+        width: 36px;
+    }
+}

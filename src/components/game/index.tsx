@@ -11,6 +11,7 @@ import { levels } from '@/levels';
 import { FieldWrapper } from '@/components/fieldWrapper';
 import { Loader } from '@/components/loader';
 import { Legend } from '@/components/legend';
+import { Objectives } from '../objectives';
 
 export default function Game({ controller }: { controller: Controller }) {
   const [selected, setSelected] = useState<Figure | null>(null);
@@ -102,11 +103,7 @@ export default function Game({ controller }: { controller: Controller }) {
         </FieldWrapper>
       ))}
       <Legend />
-      <div className="objectives">
-        {gameStatus.status.split('\n').map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-      </div>
+      <Objectives info={gameStatus.status} />
       {gameStatus.over && <div className="game-over"> {gameStatus.status} </div>}
       {nextTurn === Color.WHITE && <Loader />}
     </main>
