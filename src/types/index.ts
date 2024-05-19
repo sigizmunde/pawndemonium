@@ -35,12 +35,14 @@ enum Offset {
 
 export type Direction = [Offset, Offset];
 
-type ConditionParams = {
+export type ConditionParams = {
   boards: Board[];
   figures: Figure[];
   nextTurn: Color;
 };
+
 export type Condition = (args: ConditionParams) => boolean;
+
 export type Level = {
   boards: Board[];
   figures: Figure[];
@@ -51,12 +53,62 @@ export type Level = {
   allowSinglePlayer?: boolean;
 };
 
+// --------------- level builder types --------------------
+export type FigureSelector = {
+  role?: Role;
+  color: Color;
+};
+
+export type PositionPrecursor = {
+  condition: 'board' | 'row' | 'column';
+  comparator: 'eq' | 'in' | 'gt' | 'lt';
+  negative: boolean;
+  value: string | number | boolean;
+};
+
+export type AttackPrecursor = {
+  condition: 'attacked' | 'attacks';
+  figures?: FigureSelector[];
+};
+
+export type ConditionPrecursor = PositionPrecursor | AttackPrecursor;
+
+export function isPositionPrecursor(obj: ConditionPrecursor): obj is PositionPrecursor {
+  return 'comparator' in obj && 'value' in obj;
+}
+
+export type ConditionFrame = {
+  nextTurn: Color;
+  figureSelector: FigureSelector;
+  conditionPrecursor: ConditionPrecursor;
+};
+
+/**
+ * in two-dimensional arrays of conditions
+ * inner dimension contains conditional frames that are conjuncted
+ * (they should be joined with AND operator),
+ * those combined conditions then are being disjuncted
+ * (joined with OR operator)
+ */
+export type LevelConcept = {
+  boards: Board[];
+  figures: Figure[];
+  objectives?: string;
+  accomplishedChecks: ConditionFrame[][];
+  failedChecks: ConditionFrame[][];
+  extraChecks?: ConditionFrame[][];
+  allowSinglePlayer?: boolean;
+};
+// --------------------------------------------------------
+
+// ------------------ move estimation types ---------------
 export type EstimatedMove = {
   figure: Figure;
   move: Move;
   prohibited?: boolean;
   estimation: Estimation;
 };
+
 export type Estimation = EstimatedMove[];
 
 export type Message = {
@@ -65,3 +117,4 @@ export type Message = {
   message: string;
   arguments?: Object;
 };
+// --------------------------------------------------------
