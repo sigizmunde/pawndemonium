@@ -6,6 +6,10 @@ export type Position = {
   cell: Cell;
 };
 
+/**
+ * Cell[0] -- column
+ * Cell[1] -- row
+ */
 export type Cell = [number, number];
 
 export type Move = { position: Position; points: number; kills: null | Figure };
@@ -96,7 +100,7 @@ export type LevelConcept = {
   objectives?: string;
   accomplishedChecks: ConditionFrame[][];
   failedChecks: ConditionFrame[][];
-  extraChecks?: ConditionFrame[][];
+  // extraChecks?: yet not available
   allowSinglePlayer?: boolean;
 };
 // --------------------------------------------------------
