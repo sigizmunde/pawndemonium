@@ -1,48 +1,22 @@
-import { Figure } from '@/model/figure';
-import {
-  AttackPrecursor,
-  Condition,
-  ConditionFrame,
-  ConditionParams,
-  PositionPrecursor,
-  isPositionPrecursor,
-} from '@/types';
+import { Level, LevelConcept } from '@/types';
+import { createComplexCondition } from './conditionFunctions';
 
-function checkPositionCondition(figures: Figure[], precursor: PositionPrecursor) {
-  //
-}
-
-function checkAttackCondition(figures: Figure[], precursor: AttackPrecursor) {
-  //
-}
-
-export function createCondition(frame: ConditionFrame) {
-  return (args: ConditionParams) => {
-    if (args.nextTurn === frame.nextTurn) {
-      const checkedFigures = args.figures.filter((figure) => {
-        const selector = frame.figureSelector;
-        if (selector.role && selector.role !== figure.role) {
-          return false;
-        }
-        return selector.color === figure.color;
-      });
-      if (checkedFigures.length) {
-        if (isPositionPrecursor(frame.conditionPrecursor)) {
-          return checkPositionCondition(checkedFigures, frame.conditionPrecursor);
-        } else {
-          return checkAttackCondition(checkedFigures, frame.conditionPrecursor);
-        }
-      }
-    }
-    return false;
+export function createLevel(concept: LevelConcept): Level {
+  const {
+    boards,
+    figures,
+    objectives,
+    allowSinglePlayer,
+    accomplishedChecks: ac,
+    failedChecks: fc,
+  } = concept;
+  return {
+    boards,
+    figures,
+    objectives,
+    isAccomplished: createComplexCondition(ac),
+    isFailed: createComplexCondition(fc),
+    // extraChecks not available yet
+    allowSinglePlayer,
   };
-}
-
-export function combineConditions(
-  rules: Condition[],
-  condition: 'AND' | 'OR' = 'OR'
-): Condition {
-  return condition === 'AND'
-    ? (args: ConditionParams) => rules.every((rule) => rule(args))
-    : (args: ConditionParams) => rules.some((rule) => rule(args));
 }
