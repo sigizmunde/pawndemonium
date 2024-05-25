@@ -1,16 +1,58 @@
 'use-client';
 
-import { useState } from "react";
-import './builder.scss'
+import { useState } from 'react';
+import { Board } from '@/model/board';
+import { LevelConcept } from '@/types';
+import LevelBuild from '../levelBuild';
+import './builder.scss';
 
 export default function Builder() {
-    const [levels, setLevels] = useState<any[]>([]);
-    const [current, setCurrent] = useState<number>(0);
-    
+  const [levelConcepts, setLevelConcepts] = useState<LevelConcept[]>([]);
+
+  const handleCreateLevel = () => {
+    const newLevelConcept: LevelConcept = {
+      id: crypto.randomUUID(),
+      boards: [
+        new Board({ id: crypto.randomUUID(), space: Array(8).fill(Array(8).fill(true)) }),
+      ],
+      staticFigures: [],
+      accomplishedChecks: [],
+      failedChecks: [],
+      allowSinglePlayer: true,
+    };
+    setLevelConcepts((concepts) => [...concepts, newLevelConcept]);
+  };
+
+  const handleSaveConcept = (editedConcept: LevelConcept) => {
+    setLevelConcepts((concepts) => {
+      const current = concepts.findIndex((lc) => lc.id !== editedConcept.id);
+      if (current) {
+        concepts[current] = editedConcept;
+        return [...concepts];
+      }
+      return [...concepts, editedConcept];
+    });
+  };
+
+  const handleRemoveLevel = (id: string) => {
+    setLevelConcepts((concepts) => concepts.filter((lc) => lc.id !== id));
+  };
 
   return (
     <main className="main">
-      <div />
+      <div className="builder-buttons-block">
+        <button type="button" onClick={handleCreateLevel}>
+          Create level
+        </button>
+      </div>
+      {levelConcepts.map((lc) => (
+        <LevelBuild
+          key={lc.id}
+          levelConcept={lc}
+          onSave={handleSaveConcept}
+          onDelete={handleRemoveLevel}
+        />
+      ))}
     </main>
   );
 }
