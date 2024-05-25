@@ -5,6 +5,7 @@ import { Color, Level, Role } from '@/types';
 const boardId = 'level1_board0';
 
 const level: Level = {
+  id: 'level1',
   boards: [],
   figures: [],
   objectives: 'Here is your King!\n_\nKeep moving figures!',

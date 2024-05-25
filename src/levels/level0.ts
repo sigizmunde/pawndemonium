@@ -3,6 +3,7 @@ import { Figure } from '@/model/figure';
 import { Color, Level, Role } from '@/types';
 
 const level: Level = {
+  id: 'level0',
   boards: [],
   figures: [],
   objectives:

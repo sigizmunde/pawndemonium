@@ -48,6 +48,7 @@ export type ConditionParams = {
 export type Condition = (args: ConditionParams) => boolean;
 
 export type Level = {
+  id: string;
   boards: Board[];
   figures: Figure[];
   objectives?: string;
@@ -55,6 +56,13 @@ export type Level = {
   isFailed?: Condition;
   extraConditions?: ((args: ConditionParams) => void)[];
   allowSinglePlayer?: boolean;
+};
+
+export type Message = {
+  id?: string;
+  sender?: { type: string; id: string } | string;
+  message: string;
+  arguments?: Object;
 };
 
 // --------------- level builder types --------------------
@@ -87,6 +95,13 @@ export type ConditionFrame = {
   conditionPrecursor: ConditionPrecursor;
 };
 
+export type StaticFigure = {
+  id: string;
+  role: Role;
+  color: Color;
+  position?: Position;
+};
+
 /**
  * in two-dimensional arrays of conditions
  * inner dimension contains conditional frames that are conjuncted
@@ -95,8 +110,9 @@ export type ConditionFrame = {
  * (joined with OR operator)
  */
 export type LevelConcept = {
+  id: string;
   boards: Board[];
-  figures: Figure[];
+  staticFigures: StaticFigure[];
   objectives?: string;
   accomplishedChecks: ConditionFrame[][];
   failedChecks: ConditionFrame[][];
@@ -114,11 +130,4 @@ export type EstimatedMove = {
 };
 
 export type Estimation = EstimatedMove[];
-
-export type Message = {
-  id?: string;
-  sender?: { type: string; id: string } | string;
-  message: string;
-  arguments?: Object;
-};
 // --------------------------------------------------------

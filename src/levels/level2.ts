@@ -5,6 +5,7 @@ import { Color, Level, Role } from '@/types';
 const boardId = 'level2_board0';
 
 const level: Level = {
+  id: 'level2',
   boards: [],
   figures: [],
   objectives:
