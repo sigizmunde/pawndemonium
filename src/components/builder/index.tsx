@@ -8,6 +8,7 @@ import './builder.scss';
 
 export default function Builder() {
   const [levelConcepts, setLevelConcepts] = useState<LevelConcept[]>([]);
+  const [active, setActive] = useState<string>();
 
   const handleCreateLevel = () => {
     const newLevelConcept: LevelConcept = {
@@ -51,6 +52,8 @@ export default function Builder() {
           levelConcept={lc}
           onSave={handleSaveConcept}
           onDelete={handleRemoveLevel}
+          active={active === lc.id}
+          onSetActive={setActive}
         />
       ))}
     </main>

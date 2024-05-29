@@ -14,30 +14,29 @@ export default function LevelBuild(props: {
   levelConcept: LevelConcept;
   onSave: Function;
   onDelete: Function;
+  active: boolean;
+  onSetActive: Function;
 }) {
-  const { levelConcept, onSave, onDelete } = props;
+  const { levelConcept, onSave, onDelete, onSetActive, active } = props;
 
   const [boards, setBoards] = useState<Board[]>([...levelConcept.boards]);
   const [staticFigures, setStaticFigures] = useState<StaticFigure[]>([
     ...levelConcept.staticFigures,
   ]);
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
-  const [highlighted, setHighlighted] = useState<Position[]>([]);
+  const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
 
   const handleCellClick = (position: Position) => {
-    setHighlighted((positions) =>
-      positions.find((pos) => isEqualPosition(pos, position))
-        ? positions.filter((pos) => !isEqualPosition(pos, position))
-        : [...positions, position]
-    );
+    setHighlighted(position);
   };
 
-  const handleClickScreen = (e: React.MouseEvent) => {
+  const handleClickLevel = (e: React.MouseEvent) => {
     setClickPos({
       x: e.clientX,
       y: e.clientY,
     });
+    onSetActive(levelConcept.id);
   };
 
   const handleFigureClick = (id: string) => {
@@ -54,7 +53,7 @@ export default function LevelBuild(props: {
 
   return (
     <>
-      <div onClick={handleClickScreen}>
+      <div onClick={handleClickLevel}>
         {boards.reverse().map((b) => (
           <FieldWrapper key={b.id}>
             <Field key={b.id} id={b.id} matrix={b.space} onCellClick={handleCellClick}>
@@ -71,15 +70,7 @@ export default function LevelBuild(props: {
                     selected={!!selected && selected.id === f.id}
                   />
                 ))}
-              {highlighted
-                .filter((position) => position.board === b.id)
-                .map((position, i) => (
-                  <Spot
-                    key={i}
-                    cell={position.cell}
-                    onSpotClick={() => handleCellClick(position)}
-                  />
-                ))}
+              {active && highlighted?.board === b.id && <Spot cell={highlighted.cell} />}
             </Field>
           </FieldWrapper>
         ))}
@@ -89,7 +80,7 @@ export default function LevelBuild(props: {
           </button>
         </div>
       </div>
-      {clickPos && (
+      {active && clickPos && (
         <Popover x={clickPos.x} y={clickPos.y}>
           popover!
         </Popover>
