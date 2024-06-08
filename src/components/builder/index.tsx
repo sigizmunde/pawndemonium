@@ -21,9 +21,10 @@ export default function Builder() {
       failedChecks: [],
       allowSinglePlayer: true,
     };
-    setLevelConcepts((concepts) => [...concepts, newLevelConcept]);
+    setLevelConcepts((concepts) => [newLevelConcept, ...concepts]);
   };
 
+  // TODO: fix this not to duplicate levels
   const handleSaveConcept = (editedConcept: LevelConcept) => {
     setLevelConcepts((concepts) => {
       const current = concepts.findIndex((lc) => lc.id !== editedConcept.id);
