@@ -1,0 +1,15 @@
+.level-build-wrapper {
+    position: relative;
+
+    .edit-level-block {
+        position: relative;
+
+        @media (min-width: 1024px) {
+            left: calc(100% + var(--cell-size));
+            height: 100%;
+            position: absolute;
+            top: 0;
+            width: 200px;
+        }
+    }
+}

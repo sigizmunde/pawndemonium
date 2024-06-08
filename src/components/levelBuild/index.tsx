@@ -1,6 +1,6 @@
 'use-client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldWrapper } from '../fieldWrapper';
 import { Field } from '../field';
 import { Board } from '@/model/board';
@@ -9,10 +9,13 @@ import { Pers } from '../pers';
 import { Spot } from '../spot';
 import { isEqualPosition } from '@/helpers/isEqual';
 import Popover from '../popover';
+import './levelBuild.scss';
+import Modal from '../modal';
+import LevelBuildAddFigure from '../levelBuildAddFigure';
 
 export default function LevelBuild(props: {
   levelConcept: LevelConcept;
-  onSave: Function;
+  onSave: (editedConcept: LevelConcept) => any;
   onDelete: Function;
   active: boolean;
   onSetActive: Function;
@@ -26,9 +29,20 @@ export default function LevelBuild(props: {
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
   const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
+  const [addingFigure, setAddingFigure] = useState<boolean>(false);
+
+  const handleSaveLevel = () => {
+    const editedLevel = {
+      ...levelConcept,
+      boards,
+      staticFigures
+    }
+    onSave(editedLevel);
+  }
 
   const handleCellClick = (position: Position) => {
     setHighlighted(position);
+    setSelected(null);
   };
 
   const handleClickLevel = (e: React.MouseEvent) => {
@@ -44,6 +58,7 @@ export default function LevelBuild(props: {
       setSelected(null);
     } else {
       setSelected(staticFigures.find((sf) => sf.id === id));
+      setHighlighted(undefined);
     }
   };
 
@@ -51,9 +66,28 @@ export default function LevelBuild(props: {
     onDelete(levelConcept.id);
   };
 
+  const handleOpenAddFigure = () => {
+    setAddingFigure(true);
+  };
+
+  const handleFigureAdd = (newFigure: StaticFigure) => {
+    setStaticFigures((prev) => {
+      const filtered = prev.filter(
+        (fig) => !isEqualPosition(fig.position || null, newFigure.position || null)
+      );
+      return [...filtered, newFigure];
+    });
+  };
+
+  const handleUnselectAndCloseAll = () => {
+    setClickPos(null);
+    setHighlighted(undefined);
+    setAddingFigure(false);
+  };
+
   return (
     <>
-      <div onClick={handleClickLevel}>
+      <div className="level-build-wrapper" onClick={handleClickLevel}>
         {boards.reverse().map((b) => (
           <FieldWrapper key={b.id}>
             <Field key={b.id} id={b.id} matrix={b.space} onCellClick={handleCellClick}>
@@ -75,15 +109,29 @@ export default function LevelBuild(props: {
           </FieldWrapper>
         ))}
         <div className="edit-level-block">
-          <button type="button" onClick={handleDelete}>
+          <button type="button" className="gapped-button" onClick={handleDelete}>
             Remove level
+          </button>
+          <button type="button" className="gapped-button" onClick={handleSaveLevel}>
+            Save level
           </button>
         </div>
       </div>
-      {active && clickPos && (
+      {active && clickPos && (highlighted || selected) && (
         <Popover x={clickPos.x} y={clickPos.y}>
-          popover!
+          <button type="button" className="gapped-button" onClick={handleOpenAddFigure}>
+              {highlighted ? 'add figure' : 'change figure'}
+          </button>
         </Popover>
+      )}
+      {addingFigure && (highlighted || selected?.position) && (
+        <Modal onClose={() => setAddingFigure(false)}>
+          <LevelBuildAddFigure
+            position={highlighted || selected?.position!}
+            onFigureAdd={handleFigureAdd}
+            onClose={handleUnselectAndCloseAll}
+          />
+        </Modal>
       )}
     </>
   );
