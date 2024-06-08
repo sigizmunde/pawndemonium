@@ -1,0 +1,9 @@
+@import 'src/app/page.scss';
+
+.builder-buttons-block {
+    margin-bottom: 12px;
+
+    button {
+        @include gapped-button();
+    }
+}

@@ -17,6 +17,25 @@
   font-style: normal;
 }
 
+@mixin gapped-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+
+  &::before {
+    content: '[ '
+  }
+
+  &::after {
+    content: ' ]'
+  }
+}
+
+.gapped-button {
+  @include gapped-button();
+}
+
 :root {
   --cell-size: min(6.25vh, 10vw);
 }
