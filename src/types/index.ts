@@ -95,6 +95,11 @@ export type ConditionFrame = {
   conditionPrecursor: ConditionPrecursor;
 };
 
+export type StaticBoard = {
+  id: string;
+  space: SpaceMatrix;
+};
+
 export type StaticFigure = {
   id: string;
   role: Role;
@@ -111,7 +116,7 @@ export type StaticFigure = {
  */
 export type LevelConcept = {
   id: string;
-  boards: Board[];
+  staticBoards: StaticBoard[];
   staticFigures: StaticFigure[];
   objectives?: string;
   accomplishedChecks: ConditionFrame[][];

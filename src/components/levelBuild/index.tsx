@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { FieldWrapper } from '../fieldWrapper';
 import { Field } from '../field';
-import { Board } from '@/model/board';
-import { LevelConcept, Position, StaticFigure } from '@/types';
+import { LevelConcept, Position, StaticBoard, StaticFigure } from '@/types';
 import { Pers } from '../pers';
 import { Spot } from '../spot';
 import { isEqualPosition } from '@/helpers/isEqual';
@@ -22,7 +21,9 @@ export default function LevelBuild(props: {
 }) {
   const { levelConcept, onSave, onDelete, onSetActive, active } = props;
 
-  const [boards, setBoards] = useState<Board[]>([...levelConcept.boards]);
+  const [staticBoards, setStaticBoards] = useState<StaticBoard[]>([
+    ...levelConcept.staticBoards,
+  ]);
   const [staticFigures, setStaticFigures] = useState<StaticFigure[]>([
     ...levelConcept.staticFigures,
   ]);
@@ -34,11 +35,11 @@ export default function LevelBuild(props: {
   const handleSaveLevel = () => {
     const editedLevel = {
       ...levelConcept,
-      boards,
-      staticFigures
-    }
+      staticBoards,
+      staticFigures,
+    };
     onSave(editedLevel);
-  }
+  };
 
   const handleCellClick = (position: Position) => {
     setHighlighted(position);
@@ -88,7 +89,7 @@ export default function LevelBuild(props: {
   return (
     <>
       <div className="level-build-wrapper" onClick={handleClickLevel}>
-        {boards.reverse().map((b) => (
+        {staticBoards.reverse().map((b) => (
           <FieldWrapper key={b.id}>
             <Field key={b.id} id={b.id} matrix={b.space} onCellClick={handleCellClick}>
               {staticFigures
@@ -120,7 +121,7 @@ export default function LevelBuild(props: {
       {active && clickPos && (highlighted || selected) && (
         <Popover x={clickPos.x} y={clickPos.y}>
           <button type="button" className="gapped-button" onClick={handleOpenAddFigure}>
-              {highlighted ? 'add figure' : 'change figure'}
+            {highlighted ? 'add figure' : 'change figure'}
           </button>
         </Popover>
       )}

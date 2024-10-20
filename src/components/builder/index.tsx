@@ -13,7 +13,8 @@ export default function Builder() {
   const handleCreateLevel = () => {
     const newLevelConcept: LevelConcept = {
       id: crypto.randomUUID(),
-      boards: [
+      staticBoards: [
+        // change to StaticBoard type, not class
         new Board({ id: crypto.randomUUID(), space: Array(8).fill(Array(8).fill(true)) }),
       ],
       staticFigures: [],
