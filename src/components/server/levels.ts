@@ -1,3 +1,5 @@
+'use server';
+
 import { promises as fs } from 'fs';
 import path from 'path';
 import { LevelConcept } from '@/types';
@@ -23,5 +25,10 @@ export async function writeLevels(
 ): Promise<void> {
   const filePath = path.resolve('files', `levels${id}.json`);
   const data = JSON.stringify(levels, null, 2);
-  await fs.writeFile(filePath, data, 'utf8');
+  try {
+    await fs.writeFile(filePath, data, 'utf8');
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
