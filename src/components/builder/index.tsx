@@ -27,8 +27,9 @@ export default function Builder() {
   // TODO: fix this not to duplicate levels
   const handleSaveConcept = (editedConcept: LevelConcept) => {
     setLevelConcepts((concepts) => {
-      const current = concepts.findIndex((lc) => lc.id !== editedConcept.id);
-      if (current) {
+      const current = concepts.findIndex((lc) => lc.id === editedConcept.id);
+      if (current > -1) {
+        console.log('current =', current);
         concepts[current] = editedConcept;
         return [...concepts];
       }
