@@ -1,0 +1,228 @@
+[
+  {
+    "id": "92f7ac36-c810-448a-9527-1691a9ba59f2",
+    "staticBoards": [
+      {
+        "id": "085c6b82-df61-4276-b02d-863538ff425e",
+        "space": [
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ]
+      }
+    ],
+    "staticFigures": [
+      {
+        "id": "74534750-a973-47af-bf4d-37c38dc0c4b6",
+        "role": "queen",
+        "color": "white",
+        "position": {
+          "board": "085c6b82-df61-4276-b02d-863538ff425e",
+          "cell": [
+            4,
+            3
+          ]
+        }
+      }
+    ],
+    "accomplishedChecks": [],
+    "failedChecks": [],
+    "allowSinglePlayer": true
+  },
+  {
+    "id": "b7d39ca1-88d3-4b4a-95d5-a098d8d5081d",
+    "staticBoards": [
+      {
+        "id": "6a3852f6-f8fe-48ef-adc5-f9c9e8577b76",
+        "space": [
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ]
+      }
+    ],
+    "staticFigures": [
+      {
+        "id": "66e74585-0d27-4030-8df7-efe32309b035",
+        "role": "pawn",
+        "color": "white",
+        "position": {
+          "board": "6a3852f6-f8fe-48ef-adc5-f9c9e8577b76",
+          "cell": [
+            4,
+            3
+          ]
+        }
+      },
+      {
+        "id": "c2818019-beb1-4ac0-863d-1e7f95047efb",
+        "role": "rook",
+        "color": "black",
+        "position": {
+          "board": "6a3852f6-f8fe-48ef-adc5-f9c9e8577b76",
+          "cell": [
+            5,
+            4
+          ]
+        }
+      }
+    ],
+    "accomplishedChecks": [],
+    "failedChecks": [],
+    "allowSinglePlayer": true
+  }
+]
