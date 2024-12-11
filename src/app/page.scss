@@ -36,6 +36,13 @@
   @include gapped-button();
 }
 
+.vertical-menu {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 :root {
   --cell-size: min(6.25vh, 10vw);
 }

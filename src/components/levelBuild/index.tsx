@@ -32,6 +32,13 @@ export default function LevelBuild(props: {
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
   const [addingFigure, setAddingFigure] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!active) {
+      setSelected(null);
+      setHighlighted(undefined);
+    }
+  }, [active]);
+
   const handleSaveLevel = () => {
     const editedLevel = {
       ...levelConcept,
@@ -55,7 +62,7 @@ export default function LevelBuild(props: {
   };
 
   const handleFigureClick = (id: string) => {
-    if (selected && selected.id === id) {
+    if (active && selected && selected.id === id) {
       setSelected(null);
     } else {
       setSelected(staticFigures.find((sf) => sf.id === id));
@@ -84,6 +91,16 @@ export default function LevelBuild(props: {
     setClickPos(null);
     setHighlighted(undefined);
     setAddingFigure(false);
+    setSelected(null);
+  };
+
+  const handleFigureRemove = () => {
+    setStaticFigures((prev) =>
+      prev.filter((fig) => {
+        return !isEqualPosition(fig.position || null, selected?.position || null);
+      })
+    );
+    handleUnselectAndCloseAll();
   };
 
   return (
@@ -120,9 +137,20 @@ export default function LevelBuild(props: {
       </div>
       {active && clickPos && (highlighted || selected) && (
         <Popover x={clickPos.x} y={clickPos.y}>
-          <button type="button" className="gapped-button" onClick={handleOpenAddFigure}>
-            {highlighted ? 'add figure' : 'change figure'}
-          </button>
+          <div className="vertical-menu">
+            <button type="button" className="gapped-button" onClick={handleOpenAddFigure}>
+              {highlighted ? 'add figure' : 'change figure'}
+            </button>
+            {selected && (
+              <button
+                type="button"
+                className="gapped-button"
+                onClick={handleFigureRemove}
+              >
+                remove figure
+              </button>
+            )}
+          </div>
         </Popover>
       )}
       {addingFigure && (highlighted || selected?.position) && (
