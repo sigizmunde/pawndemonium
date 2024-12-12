@@ -1,10 +1,13 @@
 import { Cell } from '@/types';
 import Image from 'next/image';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, MouseEventHandler } from 'react';
 import stoneImage from '@/img/stone.gif';
 import './stone.scss';
 
-export const Stone: FunctionComponent<{ cell: Cell }> = ({ cell }) => {
+export const Stone: FunctionComponent<{
+  cell: Cell;
+  onClick?: MouseEventHandler<HTMLDivElement>;
+}> = ({ cell, onClick = () => {} }) => {
   const coordX = (cell[0] * 100) / 8;
   const coordY = (cell[1] * 100) / 8;
 
@@ -15,6 +18,7 @@ export const Stone: FunctionComponent<{ cell: Cell }> = ({ cell }) => {
         left: `${coordX}%`,
         bottom: `${coordY}%`,
       }}
+      onClick={onClick}
     >
       <Image
         className="stone-img"

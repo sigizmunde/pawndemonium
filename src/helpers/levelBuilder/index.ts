@@ -1,11 +1,12 @@
 import { Level, LevelConcept } from '@/types';
 import { createComplexCondition } from './conditionFunctions';
 import { Figure } from '@/model/figure';
+import { Board } from '@/model/board';
 
 export function createLevel(concept: LevelConcept): Level {
   const {
     id,
-    boards,
+    staticBoards,
     staticFigures,
     objectives,
     allowSinglePlayer,
@@ -14,6 +15,7 @@ export function createLevel(concept: LevelConcept): Level {
   } = concept;
 
   const figures = staticFigures.map((sf) => new Figure({ ...sf, onEvent: undefined }));
+  const boards = staticBoards.map((sb) => new Board({ id: sb.id, space: sb.space }));
 
   // TODO: return default checks if no checks added
   return {

@@ -12,16 +12,22 @@ type FieldProps = {
   matrix?: SpaceMatrix;
   children?: ReactNode;
   onCellClick?: Function;
+  onStoneClick?: Function;
 };
 
 export const Field: FunctionComponent<FieldProps> = ({
   id,
   children = undefined,
   onCellClick = () => {},
+  onStoneClick = () => {},
   matrix = Array(8).fill(Array(8).fill(true)),
 }) => {
   const handleClick = (x: number, y: number) => {
     onCellClick({ board: id, cell: [x, y] });
+  };
+
+  const handleStoneClick = (x: number, y: number) => {
+    onStoneClick({ board: id, cell: [x, y] });
   };
 
   return (
@@ -49,11 +55,26 @@ export const Field: FunctionComponent<FieldProps> = ({
         ))
         .reverse()}
       {matrix.map((column, i) =>
-        [...column]
-          .map((open, j) => !open && <Stone key={i + '' + j} cell={[i, j]} />)
+        [...column].map(
+          (open, j) =>
+            !open && (
+              <Stone
+                key={i + '' + j}
+                cell={[i, j]}
+                onClick={() => handleStoneClick(i, j)}
+              />
+            )
+        )
       )}
       {/* borders */}
-      {Array(8).fill(true).map((_, index) => <Fragment key={index}><Stone cell={[-1, index]}/><Stone cell={[8, index]}/></Fragment>)}
+      {Array(8)
+        .fill(true)
+        .map((_, index) => (
+          <Fragment key={index}>
+            <Stone cell={[-1, index]} />
+            <Stone cell={[8, index]} />
+          </Fragment>
+        ))}
       {children}
     </div>
   );

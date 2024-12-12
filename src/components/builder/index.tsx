@@ -98,8 +98,8 @@ export default function Builder() {
             <LevelBuild
               key={lc.id}
               levelConcept={lc}
-              onSave={handleSaveConcept}
-              onDelete={handleRemoveLevel}
+              onSaveLevel={handleSaveConcept}
+              onDeleteLevel={handleRemoveLevel}
               active={active === lc.id}
               onSetActive={setActive}
             />

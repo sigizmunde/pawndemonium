@@ -14,19 +14,20 @@ import LevelBuildAddFigure from '../levelBuildAddFigure';
 
 export default function LevelBuild(props: {
   levelConcept: LevelConcept;
-  onSave: (editedConcept: LevelConcept) => any;
-  onDelete: Function;
+  onSaveLevel: (editedConcept: LevelConcept) => any;
+  onDeleteLevel: Function;
   active: boolean;
   onSetActive: Function;
 }) {
-  const { levelConcept, onSave, onDelete, onSetActive, active } = props;
+  const { levelConcept, onSaveLevel, onDeleteLevel, onSetActive, active } = props;
 
-  const [staticBoards, setStaticBoards] = useState<StaticBoard[]>([
-    ...levelConcept.staticBoards,
-  ]);
-  const [staticFigures, setStaticFigures] = useState<StaticFigure[]>([
-    ...levelConcept.staticFigures,
-  ]);
+  // JSON parse trick to make levelConcept inmutable
+  const [staticBoards, setStaticBoards] = useState<StaticBoard[]>(
+    JSON.parse(JSON.stringify(levelConcept.staticBoards))
+  );
+  const [staticFigures, setStaticFigures] = useState<StaticFigure[]>(
+    JSON.parse(JSON.stringify(levelConcept.staticFigures))
+  );
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
   const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
@@ -45,7 +46,7 @@ export default function LevelBuild(props: {
       staticBoards,
       staticFigures,
     };
-    onSave(editedLevel);
+    onSaveLevel(editedLevel);
   };
 
   const handleCellClick = (position: Position) => {
@@ -71,7 +72,7 @@ export default function LevelBuild(props: {
   };
 
   const handleDelete = () => {
-    onDelete(levelConcept.id);
+    onDeleteLevel(levelConcept.id);
   };
 
   const handleOpenAddFigure = () => {
@@ -103,12 +104,27 @@ export default function LevelBuild(props: {
     handleUnselectAndCloseAll();
   };
 
+  const handleAddBlockCell = () => {
+    const index = staticBoards.findIndex((board) => board.id === highlighted?.board);
+    if (index > -1 && highlighted?.cell) {
+      staticBoards[index].space[highlighted.cell[0]][highlighted.cell[1]] = false;
+      setStaticBoards([...staticBoards]);
+    }
+    handleUnselectAndCloseAll();
+  };
+
   return (
     <>
       <div className="level-build-wrapper" onClick={handleClickLevel}>
         {staticBoards.reverse().map((b) => (
           <FieldWrapper key={b.id}>
-            <Field key={b.id} id={b.id} matrix={b.space} onCellClick={handleCellClick}>
+            <Field
+              key={b.id}
+              id={b.id}
+              matrix={b.space}
+              onCellClick={handleCellClick}
+              onStoneClick={() => {}}
+            >
               {staticFigures
                 .filter((f) => f.position?.board === b.id)
                 .map((f) => (
@@ -141,6 +157,15 @@ export default function LevelBuild(props: {
             <button type="button" className="gapped-button" onClick={handleOpenAddFigure}>
               {highlighted ? 'add figure' : 'change figure'}
             </button>
+            {highlighted && (
+              <button
+                type="button"
+                className="gapped-button"
+                onClick={handleAddBlockCell}
+              >
+                block cell
+              </button>
+            )}
             {selected && (
               <button
                 type="button"
