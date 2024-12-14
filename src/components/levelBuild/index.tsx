@@ -35,6 +35,7 @@ export default function LevelBuild(props: {
   const levelBoards: StaticBoard[] = JSON.parse(JSON.stringify(staticBoards));
   const levelFigures: StaticFigure[] = JSON.parse(JSON.stringify(staticFigures));
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
+  const [stoneSelected, setStoneSelected] = useState<Position>();
   const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
   const [addingFigure, setAddingFigure] = useState<boolean>(false);
@@ -42,6 +43,7 @@ export default function LevelBuild(props: {
   useEffect(() => {
     if (!active) {
       setSelected(null);
+      setStoneSelected(undefined);
       setHighlighted(undefined);
     }
   }, [active]);
@@ -49,6 +51,14 @@ export default function LevelBuild(props: {
   const handleCellClick = (position: Position) => {
     setHighlighted(position);
     setSelected(null);
+    setStoneSelected(undefined);
+  };
+
+  const handleStoneClick = (position: Position) => {
+    console.log(position);
+    setStoneSelected(position);
+    setSelected(null);
+    setHighlighted(undefined);
   };
 
   const handleClickLevel = (e: React.MouseEvent) => {
@@ -64,6 +74,7 @@ export default function LevelBuild(props: {
       setSelected(null);
     } else {
       setSelected(staticFigures.find((sf) => sf.id === id));
+      setStoneSelected(undefined);
       setHighlighted(undefined);
     }
   };
@@ -88,6 +99,7 @@ export default function LevelBuild(props: {
     setHighlighted(undefined);
     setAddingFigure(false);
     setSelected(null);
+    setStoneSelected(undefined);
   };
 
   const handleFigureRemove = () => {
@@ -108,6 +120,15 @@ export default function LevelBuild(props: {
     handleUnselectAndCloseAll();
   };
 
+  const handleRemoveBlockCell = () => {
+    const index = levelBoards.findIndex((board) => board.id === stoneSelected?.board);
+    if (index > -1 && stoneSelected?.cell) {
+      levelBoards[index].space[stoneSelected.cell[0]][stoneSelected.cell[1]] = true;
+      onSetStaticBoards([...levelBoards]);
+    }
+    handleUnselectAndCloseAll();
+  };
+
   return (
     <>
       <div className="level-build-wrapper" onClick={handleClickLevel}>
@@ -118,7 +139,7 @@ export default function LevelBuild(props: {
               id={b.id}
               matrix={b.space}
               onCellClick={handleCellClick}
-              onStoneClick={() => {}}
+              onStoneClick={handleStoneClick}
             >
               {staticFigures
                 .filter((f) => f.position?.board === b.id)
@@ -143,12 +164,18 @@ export default function LevelBuild(props: {
           </button>
         </div>
       </div>
-      {active && clickPos && (highlighted || selected) && (
+      {active && clickPos && (highlighted || selected || stoneSelected) && (
         <Popover x={clickPos.x} y={clickPos.y}>
           <div className="vertical-menu">
-            <button type="button" className="gapped-button" onClick={handleOpenAddFigure}>
-              {highlighted ? 'add figure' : 'change figure'}
-            </button>
+            {!stoneSelected && (
+              <button
+                type="button"
+                className="gapped-button"
+                onClick={handleOpenAddFigure}
+              >
+                {highlighted ? 'add figure' : 'change figure'}
+              </button>
+            )}
             {highlighted && (
               <button
                 type="button"
@@ -165,6 +192,15 @@ export default function LevelBuild(props: {
                 onClick={handleFigureRemove}
               >
                 remove figure
+              </button>
+            )}
+            {stoneSelected && (
+              <button
+                type="button"
+                className="gapped-button"
+                onClick={handleRemoveBlockCell}
+              >
+                unblock cell
               </button>
             )}
           </div>
