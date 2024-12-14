@@ -55,7 +55,6 @@ export default function LevelBuild(props: {
   };
 
   const handleStoneClick = (position: Position) => {
-    console.log(position);
     setStoneSelected(position);
     setSelected(null);
     setHighlighted(undefined);
