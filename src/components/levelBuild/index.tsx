@@ -13,21 +13,27 @@ import Modal from '../modal';
 import LevelBuildAddFigure from '../levelBuildAddFigure';
 
 export default function LevelBuild(props: {
-  levelConcept: LevelConcept;
-  onSaveLevel: (editedConcept: LevelConcept) => any;
   onDeleteLevel: Function;
   active: boolean;
   onSetActive: Function;
+  staticBoards: StaticBoard[];
+  onSetStaticBoards: (boards: StaticBoard[]) => any;
+  staticFigures: StaticFigure[];
+  onSetStaticFigures: (figures: StaticFigure[]) => any;
 }) {
-  const { levelConcept, onSaveLevel, onDeleteLevel, onSetActive, active } = props;
+  const {
+    onDeleteLevel,
+    onSetActive,
+    active,
+    staticBoards,
+    onSetStaticBoards,
+    staticFigures,
+    onSetStaticFigures,
+  } = props;
 
-  // JSON parse trick to make levelConcept inmutable
-  const [staticBoards, setStaticBoards] = useState<StaticBoard[]>(
-    JSON.parse(JSON.stringify(levelConcept.staticBoards))
-  );
-  const [staticFigures, setStaticFigures] = useState<StaticFigure[]>(
-    JSON.parse(JSON.stringify(levelConcept.staticFigures))
-  );
+  // JSON parse trick to make levelConcept immutable
+  const levelBoards: StaticBoard[] = JSON.parse(JSON.stringify(staticBoards));
+  const levelFigures: StaticFigure[] = JSON.parse(JSON.stringify(staticFigures));
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
   const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
@@ -40,15 +46,6 @@ export default function LevelBuild(props: {
     }
   }, [active]);
 
-  const handleSaveLevel = () => {
-    const editedLevel = {
-      ...levelConcept,
-      staticBoards,
-      staticFigures,
-    };
-    onSaveLevel(editedLevel);
-  };
-
   const handleCellClick = (position: Position) => {
     setHighlighted(position);
     setSelected(null);
@@ -59,7 +56,7 @@ export default function LevelBuild(props: {
       x: e.clientX,
       y: e.clientY,
     });
-    onSetActive(levelConcept.id);
+    onSetActive();
   };
 
   const handleFigureClick = (id: string) => {
@@ -72,7 +69,7 @@ export default function LevelBuild(props: {
   };
 
   const handleDelete = () => {
-    onDeleteLevel(levelConcept.id);
+    onDeleteLevel();
   };
 
   const handleOpenAddFigure = () => {
@@ -80,12 +77,10 @@ export default function LevelBuild(props: {
   };
 
   const handleFigureAdd = (newFigure: StaticFigure) => {
-    setStaticFigures((prev) => {
-      const filtered = prev.filter(
-        (fig) => !isEqualPosition(fig.position || null, newFigure.position || null)
-      );
-      return [...filtered, newFigure];
-    });
+    const filtered = levelFigures.filter(
+      (fig) => !isEqualPosition(fig.position || null, newFigure.position || null)
+    );
+    onSetStaticFigures([...filtered, newFigure]);
   };
 
   const handleUnselectAndCloseAll = () => {
@@ -96,8 +91,8 @@ export default function LevelBuild(props: {
   };
 
   const handleFigureRemove = () => {
-    setStaticFigures((prev) =>
-      prev.filter((fig) => {
+    onSetStaticFigures(
+      levelFigures.filter((fig) => {
         return !isEqualPosition(fig.position || null, selected?.position || null);
       })
     );
@@ -105,10 +100,10 @@ export default function LevelBuild(props: {
   };
 
   const handleAddBlockCell = () => {
-    const index = staticBoards.findIndex((board) => board.id === highlighted?.board);
+    const index = levelBoards.findIndex((board) => board.id === highlighted?.board);
     if (index > -1 && highlighted?.cell) {
-      staticBoards[index].space[highlighted.cell[0]][highlighted.cell[1]] = false;
-      setStaticBoards([...staticBoards]);
+      levelBoards[index].space[highlighted.cell[0]][highlighted.cell[1]] = false;
+      onSetStaticBoards([...levelBoards]);
     }
     handleUnselectAndCloseAll();
   };
@@ -116,7 +111,7 @@ export default function LevelBuild(props: {
   return (
     <>
       <div className="level-build-wrapper" onClick={handleClickLevel}>
-        {staticBoards.reverse().map((b) => (
+        {levelBoards.reverse().map((b) => (
           <FieldWrapper key={b.id}>
             <Field
               key={b.id}
@@ -145,9 +140,6 @@ export default function LevelBuild(props: {
         <div className="edit-level-block">
           <button type="button" className="gapped-button" onClick={handleDelete}>
             Remove level
-          </button>
-          <button type="button" className="gapped-button" onClick={handleSaveLevel}>
-            Save level
           </button>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Board } from '@/model/board';
-import { LevelConcept } from '@/types';
+import { LevelConcept, StaticBoard, StaticFigure } from '@/types';
 import LevelBuild from '../levelBuild';
 import { getLevels, writeLevels } from '../server/levels';
 import './builder.scss';
@@ -38,6 +38,22 @@ export default function Builder() {
     }
   };
 
+  const handleSetLevelBoards = (id: string, boards: StaticBoard[]) => {
+    const editedLevel = levelConcepts.find((lvl) => lvl.id === id);
+    if (editedLevel) {
+      editedLevel.staticBoards = boards;
+    }
+    setLevelConcepts([...levelConcepts]);
+  };
+
+  const handleSetLevelFigures = (id: string, figures: StaticFigure[]) => {
+    const editedLevel = levelConcepts.find((lvl) => lvl.id === id);
+    if (editedLevel) {
+      editedLevel.staticFigures = figures;
+    }
+    setLevelConcepts([...levelConcepts]);
+  };
+
   useEffect(() => {
     handleLoadLevels();
   }, []);
@@ -60,17 +76,6 @@ export default function Builder() {
       allowSinglePlayer: true,
     };
     setLevelConcepts((concepts) => [newLevelConcept, ...concepts]);
-  };
-
-  const handleSaveConcept = (editedConcept: LevelConcept) => {
-    setLevelConcepts((concepts) => {
-      const current = concepts.findIndex((lc) => lc.id === editedConcept.id);
-      if (current > -1) {
-        concepts[current] = editedConcept;
-        return [...concepts];
-      }
-      return [...concepts, editedConcept];
-    });
   };
 
   const handleRemoveLevel = (id: string) => {
@@ -97,11 +102,13 @@ export default function Builder() {
           {levelConcepts.map((lc) => (
             <LevelBuild
               key={lc.id}
-              levelConcept={lc}
-              onSaveLevel={handleSaveConcept}
-              onDeleteLevel={handleRemoveLevel}
+              staticBoards={lc.staticBoards}
+              onSetStaticBoards={(boards) => handleSetLevelBoards(lc.id, boards)}
+              staticFigures={lc.staticFigures}
+              onSetStaticFigures={(figures) => handleSetLevelFigures(lc.id, figures)}
+              onDeleteLevel={() => handleRemoveLevel(lc.id)}
               active={active === lc.id}
-              onSetActive={setActive}
+              onSetActive={() => setActive(lc.id)}
             />
           ))}
           {saving && <Loader />}
