@@ -1,0 +1,7 @@
+@import 'src/app/page.scss';
+
+.log-in-button {
+    @include gapped-button;
+    background-color: var(--color-dark);
+    padding: 12px;
+}

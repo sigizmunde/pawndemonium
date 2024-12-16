@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { UserContextProvider } from '@/components/userContext';
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "pawndemonium",
-  description: "chess arcade",
+  title: 'pawndemonium',
+  description: 'chess arcade',
 };
 
 export default function RootLayout({
@@ -16,7 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <GoogleOAuthProvider
+          clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID || ''}
+        >
+          <UserContextProvider>{children}</UserContextProvider>
+        </GoogleOAuthProvider>
+      </body>
     </html>
   );
 }

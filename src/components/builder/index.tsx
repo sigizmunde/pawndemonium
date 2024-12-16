@@ -5,9 +5,9 @@ import { Board } from '@/model/board';
 import { LevelConcept, StaticBoard, StaticFigure } from '@/types';
 import LevelBuild from '../levelBuild';
 import { getLevels, writeLevels } from '../server/levels';
-import './builder.scss';
 import { Loader } from '../loader';
 import { convertBoardToStatic } from '@/helpers/convertBoardToStatic';
+import './builder.scss';
 
 export default function Builder() {
   const [levelConcepts, setLevelConcepts] = useState<LevelConcept[]>([]);
