@@ -5,9 +5,9 @@ Source :
 https://github.com/vercel/next.js/blob/canary/examples/with-mongodb-mongoose/utils/dbConnect.js 
 **/
 
-const { REACT_APP_DB_HOST } = process.env;
+const { DB_HOST } = process.env;
 
-if (!REACT_APP_DB_HOST) {
+if (!DB_HOST) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
@@ -41,7 +41,7 @@ async function dbConnect() {
   // cached.promise = mongoose.connect(DB_HOST, opts).then((mongoose) => {
   //   return mongoose;
   // });
-  const promise = mongoose.connect(REACT_APP_DB_HOST!, opts).then((mongooseResponse) => {
+  const promise = mongoose.connect(DB_HOST!, opts).then((mongooseResponse) => {
     console.log('db connected');
     return mongooseResponse;
   });

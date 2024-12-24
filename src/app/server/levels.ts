@@ -10,7 +10,7 @@ export async function getLevelsFromFile(id: string = ''): Promise<LevelConcept[]
   const filePath = path.resolve('files', `levels${id}.json`);
   try {
     const data = await fs.readFile(filePath, 'utf8');
-    return JSON.parse(data) as LevelConcept[];
+    return JSON.parse(data || '[]') as LevelConcept[];
   } catch (error) {
     if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
       // file does not exist, create it with an empty array
@@ -44,7 +44,9 @@ export async function readLevelsFromDB(userEmail: string): Promise<LevelConcept[
     const filter = {
       userEmail,
     };
-    const levels = await Levels.findOne(filter).then((res) => JSON.parse(res?.levels));
+    const levels = await Levels.findOne(filter).then((res) =>
+      JSON.parse(res?.levels || '[]')
+    );
     return levels;
   } catch (error) {
     console.log(error);
