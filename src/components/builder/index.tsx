@@ -1,15 +1,17 @@
 'use-client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Board } from '@/model/board';
 import { LevelConcept, StaticBoard, StaticFigure } from '@/types';
 import LevelBuild from '../levelBuild';
-import { getLevels, writeLevels } from '../server/levels';
+import { getLevels, writeLevels } from '../../app/server/levels';
+import { UserContext } from '../userContext';
 import { Loader } from '../loader';
 import { convertBoardToStatic } from '@/helpers/convertBoardToStatic';
 import './builder.scss';
 
 export default function Builder() {
+  const { user } = useContext(UserContext);
   const [levelConcepts, setLevelConcepts] = useState<LevelConcept[]>([]);
   const [active, setActive] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,7 +20,7 @@ export default function Builder() {
   const handleLoadLevels = async () => {
     setLoading(true);
     try {
-      const l = await getLevels();
+      const l = await getLevels(user?.email);
       setLevelConcepts(l);
       setLoading(false);
     } catch (error) {
@@ -30,7 +32,7 @@ export default function Builder() {
   const handleSaveLevels = async () => {
     setSaving(true);
     try {
-      await writeLevels('', levelConcepts);
+      await writeLevels({ userEmail: user?.email, levels: levelConcepts });
       setSaving(false);
     } catch (error) {
       console.log(error);
@@ -56,6 +58,7 @@ export default function Builder() {
 
   useEffect(() => {
     handleLoadLevels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCreateLevel = () => {
