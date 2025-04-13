@@ -54,6 +54,10 @@ export default function LevelBuild(props: {
     setStoneSelected(undefined);
   };
 
+  const handleSpotClick = () => {
+    setHighlighted(undefined);
+  };
+
   const handleStoneClick = (position: Position) => {
     setStoneSelected(position);
     setSelected(null);
@@ -153,7 +157,9 @@ export default function LevelBuild(props: {
                     selected={!!selected && selected.id === f.id}
                   />
                 ))}
-              {active && highlighted?.board === b.id && <Spot cell={highlighted.cell} />}
+              {active && highlighted?.board === b.id && (
+                <Spot onSpotClick={handleSpotClick} cell={highlighted.cell} />
+              )}
             </Field>
           </FieldWrapper>
         ))}
