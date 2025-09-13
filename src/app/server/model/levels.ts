@@ -16,7 +16,7 @@ const levelsMongooseSchema = new Schema(
   { versionKey: false, timestamps: false }
 );
 
-// the post method is a Mongoose middleware (or hook) that runs after a specific operation—in this case, the save operation
+// the post method is a Mongoose middleware (or hook) that runs after a specific operation — in this case, the save operation
 // levelsMongooseSchema.post('save', handleSaveError);
 
 const Levels = mongoose.models.levels || model('levels', levelsMongooseSchema);

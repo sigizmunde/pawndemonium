@@ -89,6 +89,7 @@ export function isPositionPrecursor(obj: ConditionPrecursor): obj is PositionPre
   return 'comparator' in obj && 'value' in obj;
 }
 
+// ConditionFrame is a single rule to be evaluated
 export type ConditionFrame = {
   nextTurn: Color;
   figureSelector: FigureSelector;
