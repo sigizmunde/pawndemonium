@@ -8,6 +8,11 @@
     background-color: black;
     color: white;
     z-index: 2;
+
+    .objectives-contents {
+        max-height: calc(6*var(--cell-size));
+        overflow-y: auto;
+    }
 }
 
 .objectives {
