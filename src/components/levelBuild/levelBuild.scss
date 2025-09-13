@@ -3,6 +3,10 @@
 
     .edit-level-block {
         position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 8px;
 
         @media (min-width: 1024px) {
             left: calc(100% + var(--cell-size));
@@ -10,6 +14,22 @@
             position: absolute;
             top: 0;
             width: 200px;
+        }
+    }
+
+    // override objectives styles to be relative to level build component
+    .objectives,
+    .objectives-mobile {
+        position: absolute;
+        right: calc(-5 * var(--cell-size));
+        width: calc(4 * var(--cell-size));
+    }
+
+    .objectives-mobile {
+        left: calc(100% + var(--cell-size));
+
+        &.open {
+            transform: translate(calc(-100%), 0);
         }
     }
 }

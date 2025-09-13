@@ -8,9 +8,11 @@ import { Pers } from '../pers';
 import { Spot } from '../spot';
 import { isEqualPosition } from '@/helpers/isEqual';
 import Popover from '../popover';
-import './levelBuild.scss';
 import Modal from '../modal';
 import LevelBuildAddFigure from '../levelBuildAddFigure';
+import LevelBuildEditObjectives from '../levelBuildEditObjectives';
+import { Objectives } from '../objectives';
+import './levelBuild.scss';
 
 export default function LevelBuild(props: {
   onDeleteLevel: Function;
@@ -20,6 +22,8 @@ export default function LevelBuild(props: {
   onSetStaticBoards: (boards: StaticBoard[]) => any;
   staticFigures: StaticFigure[];
   onSetStaticFigures: (figures: StaticFigure[]) => any;
+  levelObjectives: string | null | undefined;
+  onSetLevelObjectives: (objectives: string) => any;
 }) {
   const {
     onDeleteLevel,
@@ -29,6 +33,8 @@ export default function LevelBuild(props: {
     onSetStaticBoards,
     staticFigures,
     onSetStaticFigures,
+    levelObjectives,
+    onSetLevelObjectives,
   } = props;
 
   // JSON parse trick to make levelConcept immutable
@@ -39,6 +45,7 @@ export default function LevelBuild(props: {
   const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
   const [addingFigure, setAddingFigure] = useState<boolean>(false);
+  const [editingObjectives, setEditingObjectives] = useState<boolean>(false);
 
   useEffect(() => {
     if (!active) {
@@ -90,11 +97,19 @@ export default function LevelBuild(props: {
     setAddingFigure(true);
   };
 
+  const handleOpenEditObjectives = () => {
+    setEditingObjectives(true);
+  };
+
   const handleFigureAdd = (newFigure: StaticFigure) => {
     const filtered = levelFigures.filter(
       (fig) => !isEqualPosition(fig.position || null, newFigure.position || null)
     );
     onSetStaticFigures([...filtered, newFigure]);
+  };
+
+  const handleUpdateObjectives = (newObjectives: string) => {
+    onSetLevelObjectives(newObjectives);
   };
 
   const handleUnselectAndCloseAll = () => {
@@ -103,6 +118,7 @@ export default function LevelBuild(props: {
     setAddingFigure(false);
     setSelected(null);
     setStoneSelected(undefined);
+    setEditingObjectives(false);
   };
 
   const handleFigureRemove = () => {
@@ -163,9 +179,23 @@ export default function LevelBuild(props: {
             </Field>
           </FieldWrapper>
         ))}
+        {/* <div className="objectives-block">
+          {levelObjectives || 'no objectives for this level yet'}
+        </div> */}
+        <Objectives
+          info={levelObjectives || 'no objectives for this level yet'}
+          showByDefault={false}
+        />
         <div className="edit-level-block">
           <button type="button" className="gapped-button" onClick={handleDelete}>
             Remove level
+          </button>
+          <button
+            type="button"
+            className="gapped-button"
+            onClick={handleOpenEditObjectives}
+          >
+            Edit objectives
           </button>
         </div>
       </div>
@@ -216,6 +246,15 @@ export default function LevelBuild(props: {
           <LevelBuildAddFigure
             position={highlighted || selected?.position!}
             onFigureAdd={handleFigureAdd}
+            onClose={handleUnselectAndCloseAll}
+          />
+        </Modal>
+      )}
+      {editingObjectives && (
+        <Modal onClose={() => setEditingObjectives(false)}>
+          <LevelBuildEditObjectives
+            currentObjectives={levelObjectives || ''}
+            onSave={handleUpdateObjectives}
             onClose={handleUnselectAndCloseAll}
           />
         </Modal>

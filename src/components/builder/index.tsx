@@ -56,6 +56,14 @@ export default function Builder() {
     setLevelConcepts([...levelConcepts]);
   };
 
+  const handleSetLevelObjectives = (id: string, objectives: string) => {
+    const editedLevel = levelConcepts.find((lvl) => lvl.id === id);
+    if (editedLevel) {
+      editedLevel.objectives = objectives;
+    }
+    setLevelConcepts([...levelConcepts]);
+  };
+
   useEffect(() => {
     handleLoadLevels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,6 +120,10 @@ export default function Builder() {
               onDeleteLevel={() => handleRemoveLevel(lc.id)}
               active={active === lc.id}
               onSetActive={() => setActive(lc.id)}
+              levelObjectives={lc.objectives || ''}
+              onSetLevelObjectives={(objectives) =>
+                handleSetLevelObjectives(lc.id, objectives)
+              }
             />
           ))}
           {saving && <Loader />}
