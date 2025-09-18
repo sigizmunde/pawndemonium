@@ -1,19 +1,25 @@
 'use client';
 
 import { Field } from '@/components/field';
-import { Color, Move, Position } from '@/types';
+import { Color, Level, Move, Position } from '@/types';
 import { Pers } from '@/components/pers';
 import { Figure } from '@/model/figure';
 import { useCallback, useEffect, useState } from 'react';
 import { Spot } from '@/components/spot';
 import { Controller } from '@/controller';
-import { levels } from '@/levels';
+import { levels as defaultLevels } from '@/levels';
 import { FieldWrapper } from '@/components/fieldWrapper';
 import { Loader } from '@/components/loader';
 import { Legend } from '@/components/legend';
 import { Objectives } from '../objectives';
 
-export default function Game({ controller }: { controller: Controller }) {
+export default function Game({
+  controller,
+  levels = defaultLevels,
+}: {
+  controller: Controller;
+  levels?: Level[];
+}) {
   const [selected, setSelected] = useState<Figure | null>(null);
   const [highlighted, setHighlighted] = useState<Move[]>([]);
   const [counter, setCounter] = useState<number>(0);
@@ -41,11 +47,9 @@ export default function Game({ controller }: { controller: Controller }) {
   }, [controller, handleUpdate]);
 
   useEffect(() => {
-    if (controller.levels.length < 1) {
-      controller.levels = [...levels];
-      controller.loadLevel(0);
-    }
-  }, [controller]);
+    controller.levels = [...levels];
+    controller.loadStartingLevel();
+  }, [controller, levels]);
 
   const handleCellClick = (position: Position) => {
     if (selected) {
