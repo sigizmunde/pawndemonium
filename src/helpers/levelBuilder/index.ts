@@ -2,8 +2,12 @@ import { Level, LevelConcept } from '@/types';
 import { createComplexCondition } from './conditionFunctions';
 import { Figure } from '@/model/figure';
 import { Board } from '@/model/board';
+import { pawnToQueen } from './typicalConditions';
 
-export function createLevel(concept: LevelConcept): Level {
+export function createLevel(
+  concept: LevelConcept,
+  options: { pawnToQueen: boolean } = { pawnToQueen: true }
+): Level {
   const {
     id,
     staticBoards,
@@ -25,7 +29,7 @@ export function createLevel(concept: LevelConcept): Level {
     objectives,
     isAccomplished: createComplexCondition(ac),
     isFailed: createComplexCondition(fc),
-    // extraChecks not available yet
+    extraConditions: options.pawnToQueen ? [pawnToQueen] : [],
     allowSinglePlayer,
   };
 }
