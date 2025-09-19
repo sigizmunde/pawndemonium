@@ -204,10 +204,6 @@ export class Controller {
     this._moveCount = 0;
     this._nextTurn = Color.BLACK;
     this.loadLevel(0);
-
-    if (this.levels?.[0]?.boards?.length < 2) {
-      this.loadLevel(1);
-    }
   }
 
   loadLevel(index?: number) {
