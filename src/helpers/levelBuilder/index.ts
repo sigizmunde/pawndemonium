@@ -2,7 +2,7 @@ import { Level, LevelConcept } from '@/types';
 import { createComplexCondition } from './conditionFunctions';
 import { Figure } from '@/model/figure';
 import { Board } from '@/model/board';
-import { pawnToQueen } from './typicalConditions';
+import { noMoreBlackFigures, noMoreWhiteFigures, pawnToQueen } from './typicalConditions';
 
 export function createLevel(
   concept: LevelConcept,
@@ -27,8 +27,8 @@ export function createLevel(
     boards,
     figures,
     objectives,
-    isAccomplished: createComplexCondition(ac),
-    isFailed: createComplexCondition(fc),
+    isAccomplished: ac.length ? createComplexCondition(ac) : noMoreWhiteFigures,
+    isFailed: fc.length ? createComplexCondition(fc) : noMoreBlackFigures,
     extraConditions: options.pawnToQueen ? [pawnToQueen] : [],
     allowSinglePlayer,
   };

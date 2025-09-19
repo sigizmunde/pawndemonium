@@ -12,3 +12,14 @@ export const pawnToQueen: (args: ConditionParams) => void = ({ figures }) => {
     }
   });
 };
+
+/**
+ * accomplished and failed conditions
+ */
+export const noMoreWhiteFigures: (args: ConditionParams) => boolean = ({ figures }) => {
+  return !figures.some((f) => f.position && f.color === Color.WHITE);
+};
+
+export const noMoreBlackFigures: (args: ConditionParams) => boolean = ({ figures }) => {
+  return !figures.some((f) => f.position && f.color === Color.BLACK);
+};

@@ -182,8 +182,12 @@ export class Controller {
     this.checkLevelExtraConditions();
     if (this.checkIfAccomplished()) {
       if (this._level < this.levels.length - 1) {
-        const removedBoard = this.boards.shift();
-        this.figures = this.figures.filter((f) => f.position?.board != removedBoard?.id);
+        if (this.boards.length >= 2) {
+          const removedBoard = this.boards.shift();
+          this.figures = this.figures.filter(
+            (f) => f.position?.board != removedBoard?.id
+          );
+        }
         this.loadLevel();
       } else {
         this._gameStatus = {
