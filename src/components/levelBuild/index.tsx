@@ -242,7 +242,7 @@ export default function LevelBuild(props: {
         </Popover>
       )}
       {addingFigure && (highlighted || selected?.position) && (
-        <Modal onClose={() => setAddingFigure(false)}>
+        <Modal onClose={handleUnselectAndCloseAll}>
           <LevelBuildAddFigure
             position={highlighted || selected?.position!}
             onFigureAdd={handleFigureAdd}
@@ -251,7 +251,7 @@ export default function LevelBuild(props: {
         </Modal>
       )}
       {editingObjectives && (
-        <Modal onClose={() => setEditingObjectives(false)}>
+        <Modal onClose={handleUnselectAndCloseAll}>
           <LevelBuildEditObjectives
             currentObjectives={levelObjectives || ''}
             onSave={handleUpdateObjectives}
