@@ -60,11 +60,6 @@ export default function LevelBuild({
   // JSON parse trick to make levelConcept immutable
   const levelBoards: StaticBoard[] = JSON.parse(JSON.stringify(staticBoards));
   const levelFigures: StaticFigure[] = JSON.parse(JSON.stringify(staticFigures));
-  const levelAccomplishedChecks = JSON.parse(JSON.stringify(accomplishedChecks));
-  const levelFailedChecks = JSON.parse(JSON.stringify(failedChecks));
-  const levelExtraChecks = extraChecks
-    ? JSON.parse(JSON.stringify(extraChecks))
-    : undefined;
 
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
   const [stoneSelected, setStoneSelected] = useState<Position>();
@@ -297,9 +292,9 @@ export default function LevelBuild({
       {editingConditions && (
         <Modal>
           <LevelBuildConditions
-            accomplishedChecks={levelAccomplishedChecks}
-            failedChecks={levelFailedChecks}
-            extraChecks={levelExtraChecks}
+            accomplishedChecks={accomplishedChecks}
+            failedChecks={failedChecks}
+            extraChecks={extraChecks}
             onSetAccomplishedChecks={onSetAccomplishedChecks}
             onSetFailedChecks={onSetFailedChecks}
             onSetExtraChecks={onSetExtraChecks}

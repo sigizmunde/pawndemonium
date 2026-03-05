@@ -94,6 +94,7 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
                         }
                       }}
                     >
+                      {/* should explicitly check position for the current board or give an option to choose specific/all boards */}
                       {/* <option value="board">board</option> 
                       not implemented yet */}
                       <option value="row">row</option>
