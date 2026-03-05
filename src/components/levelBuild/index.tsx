@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { FieldWrapper } from '../fieldWrapper';
 import { Field } from '../field';
-import { LevelConcept, Position, StaticBoard, StaticFigure } from '@/types';
+import {
+  ConditionFrame,
+  LevelConcept,
+  Position,
+  StaticBoard,
+  StaticFigure,
+} from '@/types';
 import { Pers } from '../pers';
 import { Spot } from '../spot';
 import { isEqualPosition } from '@/helpers/isEqual';
@@ -13,8 +19,28 @@ import LevelBuildAddFigure from '../levelBuildAddFigure';
 import LevelBuildEditObjectives from '../levelBuildEditObjectives';
 import { Objectives } from '../objectives';
 import './levelBuild.scss';
+import LevelBuildConditions from '../levelBuildConditions';
 
-export default function LevelBuild(props: {
+/**
+ * for now win conditions in each Level are used to proceed to the next one, if the level is the last in a series, win conditions define the victory
+ */
+export default function LevelBuild({
+  onDeleteLevel,
+  onSetActive,
+  active,
+  staticBoards,
+  onSetStaticBoards,
+  staticFigures,
+  onSetStaticFigures,
+  levelObjectives,
+  onSetLevelObjectives,
+  accomplishedChecks,
+  failedChecks,
+  extraChecks = undefined,
+  onSetAccomplishedChecks,
+  onSetFailedChecks,
+  onSetExtraChecks = undefined,
+}: {
   onDeleteLevel: Function;
   active: boolean;
   onSetActive: Function;
@@ -24,28 +50,29 @@ export default function LevelBuild(props: {
   onSetStaticFigures: (figures: StaticFigure[]) => any;
   levelObjectives: string | null | undefined;
   onSetLevelObjectives: (objectives: string) => any;
+  accomplishedChecks: ConditionFrame[][];
+  failedChecks: ConditionFrame[][];
+  extraChecks?: ConditionFrame[][];
+  onSetAccomplishedChecks: (checks: ConditionFrame[][]) => any;
+  onSetFailedChecks: (checks: ConditionFrame[][]) => any;
+  onSetExtraChecks?: (checks: ConditionFrame[][]) => any;
 }) {
-  const {
-    onDeleteLevel,
-    onSetActive,
-    active,
-    staticBoards,
-    onSetStaticBoards,
-    staticFigures,
-    onSetStaticFigures,
-    levelObjectives,
-    onSetLevelObjectives,
-  } = props;
-
   // JSON parse trick to make levelConcept immutable
   const levelBoards: StaticBoard[] = JSON.parse(JSON.stringify(staticBoards));
   const levelFigures: StaticFigure[] = JSON.parse(JSON.stringify(staticFigures));
+  const levelAccomplishedChecks = JSON.parse(JSON.stringify(accomplishedChecks));
+  const levelFailedChecks = JSON.parse(JSON.stringify(failedChecks));
+  const levelExtraChecks = extraChecks
+    ? JSON.parse(JSON.stringify(extraChecks))
+    : undefined;
+
   const [selected, setSelected] = useState<StaticFigure | null | undefined>(null);
   const [stoneSelected, setStoneSelected] = useState<Position>();
   const [highlighted, setHighlighted] = useState<Position>();
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(null);
   const [addingFigure, setAddingFigure] = useState<boolean>(false);
   const [editingObjectives, setEditingObjectives] = useState<boolean>(false);
+  const [editingConditions, setEditingConditions] = useState<boolean>(false);
 
   useEffect(() => {
     if (!active) {
@@ -99,6 +126,10 @@ export default function LevelBuild(props: {
 
   const handleOpenEditObjectives = () => {
     setEditingObjectives(true);
+  };
+
+  const handleOpenEditConditions = () => {
+    setEditingConditions(true);
   };
 
   const handleFigureAdd = (newFigure: StaticFigure) => {
@@ -179,9 +210,6 @@ export default function LevelBuild(props: {
             </Field>
           </FieldWrapper>
         ))}
-        {/* <div className="objectives-block">
-          {levelObjectives || 'no objectives for this level yet'}
-        </div> */}
         <Objectives
           info={levelObjectives || 'no objectives for this level yet'}
           showByDefault={false}
@@ -189,6 +217,13 @@ export default function LevelBuild(props: {
         <div className="edit-level-block">
           <button type="button" className="gapped-button" onClick={handleDelete}>
             Remove level
+          </button>
+          <button
+            type="button"
+            className="gapped-button"
+            onClick={handleOpenEditConditions}
+          >
+            Edit conditions
           </button>
           <button
             type="button"
@@ -256,6 +291,19 @@ export default function LevelBuild(props: {
             currentObjectives={levelObjectives || ''}
             onSave={handleUpdateObjectives}
             onClose={handleUnselectAndCloseAll}
+          />
+        </Modal>
+      )}
+      {editingConditions && (
+        <Modal>
+          <LevelBuildConditions
+            accomplishedChecks={levelAccomplishedChecks}
+            failedChecks={levelFailedChecks}
+            extraChecks={levelExtraChecks}
+            onSetAccomplishedChecks={onSetAccomplishedChecks}
+            onSetFailedChecks={onSetFailedChecks}
+            onSetExtraChecks={onSetExtraChecks}
+            onClose={() => setEditingConditions(false)}
           />
         </Modal>
       )}

@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from 'react';
 import { Board } from '@/model/board';
-import { Level, LevelConcept, StaticBoard, StaticFigure } from '@/types';
+import { ConditionFrame, Level, LevelConcept, StaticBoard, StaticFigure } from '@/types';
 import LevelBuild from '../levelBuild';
 import { getLevels, writeLevels } from '../../app/server/levels';
 import { UserContext } from '../userContext';
@@ -59,6 +59,22 @@ export default function Builder() {
   const handleSetLevelObjectives = (id: string, objectives: string) => {
     setLevelConcepts((prev) =>
       prev.map((lvl) => (lvl.id === id ? { ...lvl, objectives } : lvl))
+    );
+  };
+
+  const handleSetLevelAccomplishedChecks = (
+    id: string,
+    accomplishedChecks: ConditionFrame[][]
+  ) => {
+    console.log('accomplishedChecks', JSON.stringify(accomplishedChecks));
+    setLevelConcepts((prev) =>
+      prev.map((lvl) => (lvl.id === id ? { ...lvl, accomplishedChecks } : lvl))
+    );
+  };
+
+  const handleSetLevelFailedChecks = (id: string, failedChecks: ConditionFrame[][]) => {
+    setLevelConcepts((prev) =>
+      prev.map((lvl) => (lvl.id === id ? { ...lvl, failedChecks } : lvl))
     );
   };
 
@@ -135,6 +151,16 @@ export default function Builder() {
                   onSetLevelObjectives={(objectives) =>
                     handleSetLevelObjectives(lc.id, objectives)
                   }
+                  accomplishedChecks={lc.accomplishedChecks}
+                  failedChecks={lc.failedChecks}
+                  // extraChecks={lc.extraChecks}
+                  onSetAccomplishedChecks={(checks) =>
+                    handleSetLevelAccomplishedChecks(lc.id, checks)
+                  }
+                  onSetFailedChecks={(checks) =>
+                    handleSetLevelFailedChecks(lc.id, checks)
+                  }
+                  // onSetExtraChecks={(checks) => handleSetLevelExtraChecks(lc.id, checks)}
                 />
               ))
               .reverse()

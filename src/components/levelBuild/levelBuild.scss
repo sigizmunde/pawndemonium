@@ -23,10 +23,12 @@
         position: absolute;
         right: calc(-5 * var(--cell-size));
         width: calc(4 * var(--cell-size));
+        transform: translateY(24px);
     }
 
     .objectives-mobile {
         left: calc(100% + var(--cell-size));
+        transform: none;
 
         &.open {
             transform: translate(calc(-100%), 0);
