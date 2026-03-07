@@ -5,7 +5,6 @@ import {
   ConditionFrame,
   ConditionParams,
   PositionPrecursor,
-  isPositionPrecursor,
 } from '@/types';
 import { getIsUnderAttack } from '../getIsUnderAttack';
 import { Board } from '@/model/board';
@@ -71,16 +70,22 @@ export function createCondition(frame: ConditionFrame) {
         return selector.color === figure.color;
       });
       if (checkedFigures.length) {
-        if (isPositionPrecursor(frame.conditionPrecursor)) {
-          return checkPositionCondition(checkedFigures, frame.conditionPrecursor);
-        } else {
-          return checkAttackCondition(
+        let positiveResult = true;
+        if (frame.positionCondition) {
+          positiveResult &&= checkPositionCondition(
             checkedFigures,
-            frame.conditionPrecursor,
+            frame.positionCondition
+          );
+        }
+        if (positiveResult && frame.attackCondition) {
+          positiveResult &&= checkAttackCondition(
+            checkedFigures,
+            frame.attackCondition,
             args.figures,
             args.boards
           );
         }
+        return positiveResult;
       }
     }
     return false;

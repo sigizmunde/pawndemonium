@@ -80,20 +80,15 @@ export type PositionPrecursor = {
 
 export type AttackPrecursor = {
   condition: 'attacked' | 'attacks';
-  figures?: FigureSelector[];
+  role?: Role;
 };
-
-export type ConditionPrecursor = PositionPrecursor | AttackPrecursor;
-
-export function isPositionPrecursor(obj: ConditionPrecursor): obj is PositionPrecursor {
-  return 'comparator' in obj && 'value' in obj;
-}
 
 // ConditionFrame is a single rule to be evaluated
 export type ConditionFrame = {
   nextTurn: Color;
   figureSelector: FigureSelector;
-  conditionPrecursor: ConditionPrecursor;
+  positionCondition?: PositionPrecursor;
+  attackCondition?: AttackPrecursor;
 };
 
 export type StaticBoard = {
