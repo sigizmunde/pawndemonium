@@ -20,6 +20,7 @@ export function createLevel(
 
   const figures = staticFigures.map((sf) => new Figure({ ...sf, onEvent: undefined }));
   const boards = staticBoards.map((sb) => new Board({ id: sb.id, space: sb.space }));
+  const boardIds = boards.map((board) => board.id);
 
   // TODO: return default checks if no checks added
   return {
@@ -27,8 +28,8 @@ export function createLevel(
     boards,
     figures,
     objectives,
-    isAccomplished: ac.length ? createComplexCondition(ac) : noMoreWhiteFigures,
-    isFailed: fc.length ? createComplexCondition(fc) : noMoreBlackFigures,
+    isAccomplished: ac.length ? createComplexCondition(ac, boardIds) : noMoreWhiteFigures,
+    isFailed: fc.length ? createComplexCondition(fc, boardIds) : noMoreBlackFigures,
     extraConditions: options.pawnToQueen ? [pawnToQueen] : [],
     allowSinglePlayer,
   };

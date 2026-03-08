@@ -59,10 +59,22 @@ function checkAttackCondition(
   });
 }
 
-export function createCondition(frame: ConditionFrame) {
+/**
+ * Creates a Condition function based on a single ConditionFrame, with optional board filtering.
+ * @param frame - a single conditionFrame to be evaluated
+ * @param boardIds - an optional array of board IDs to limit the region of interest for the condition
+ * @returns a Condition function to integrate into level checks
+ */
+export function createCondition(frame: ConditionFrame, boardIds?: string[]): Condition {
   return (args: ConditionParams) => {
     if (args.nextTurn === frame.nextTurn) {
-      const checkedFigures = args.figures.filter((figure) => {
+      const prefilteredByBoard = boardIds?.length
+        ? args.figures.filter(
+            (figure) =>
+              figure.position?.board && boardIds.includes(figure.position?.board)
+          )
+        : args.figures;
+      const checkedFigures = prefilteredByBoard.filter((figure) => {
         const selector = frame.figureSelector;
         if (selector.role && selector.role !== figure.role) {
           return false;
@@ -101,11 +113,20 @@ export function combineConditions(
     : (args: ConditionParams) => rules.some((rule) => rule(args));
 }
 
-export function createComplexCondition(condFrames2D: ConditionFrame[][]): Condition {
+/**
+ * Creates a complex Condition function based on a 2D array of ConditionFrames, with optional board filtering.
+ * @param condFrames2D - a 2-dimensional array of conditionFrames to be evaluated, where the inner arrays represent groups of conditions to be combined with AND, and the outer array represents groups to be combined with OR
+ * @param boardIds - an optional array of board IDs to limit the region of interest for the conditions (e.g., within the level boards)
+ * @returns a Condition function to integrate into level checks
+ */
+export function createComplexCondition(
+  condFrames2D: ConditionFrame[][],
+  boardIds?: string[]
+): Condition {
   return combineConditions(
     condFrames2D.map((frames1D) =>
       combineConditions(
-        frames1D.map((frame) => createCondition(frame)),
+        frames1D.map((frame) => createCondition(frame, boardIds)),
         'AND'
       )
     ),
