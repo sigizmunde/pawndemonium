@@ -1,0 +1,51 @@
+@import '../../app/page.scss';
+
+.level-build-condition-form {
+    color: #ccc;
+
+    select,
+    input {
+        padding: 4px;
+        background-color: #6d6358;
+        color: #fff;
+        @include silkscreen-regular;
+    }
+
+    .condition-row {
+        position: relative;
+        border: 1px solid #ccc;
+        padding: 10px;
+
+        .or-condition {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -60%);
+            background-color: #000;
+            padding: 0 32px;
+        }
+    }
+
+    .condition-cell {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+
+        .condition-head>*,
+        .condition-description>* {
+            margin-right: 8px;
+        }
+
+        .unchecked {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .remove-condition-button {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    }
+}
