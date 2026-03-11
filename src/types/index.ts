@@ -83,7 +83,7 @@ export type AttackPrecursor = {
   role?: Role;
 };
 
-// ConditionFrame is a single rule to be evaluated
+// ConditionFrame is a single check to be evaluated
 export type ConditionFrame = {
   nextTurn: Color;
   figureSelector: FigureSelector;
@@ -107,7 +107,7 @@ export type StaticFigure = {
  * in two-dimensional arrays of conditions
  * inner dimension contains conditional frames that are conjuncted
  * (they should be joined with AND operator),
- * those combined conditions then are being disjuncted
+ * those combined conditions (rules) then are being disjuncted
  * (joined with OR operator)
  */
 export type LevelConcept = {
