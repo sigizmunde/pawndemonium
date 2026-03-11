@@ -22,61 +22,128 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
     onSubmit(conditionsState);
   };
 
+  const togglePositionCondition = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    ruleIndex: number,
+    conditionIndex: number
+  ) => {
+    const newConditions = [...conditionsState];
+    if (e.target.checked) {
+      newConditions[ruleIndex][conditionIndex].positionCondition = {
+        condition: 'row',
+        comparator: 'eq',
+        negative: false,
+        value: 0,
+      };
+    } else {
+      delete newConditions[ruleIndex][conditionIndex].positionCondition;
+    }
+    setConditionsState(newConditions);
+  };
+
+  const toggleAttackCondition = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    ruleIndex: number,
+    conditionIndex: number
+  ) => {
+    const newConditions = [...conditionsState];
+    if (e.target.checked) {
+      newConditions[ruleIndex][conditionIndex].attackCondition = {
+        condition: 'attacked',
+      };
+    } else {
+      delete newConditions[ruleIndex][conditionIndex].attackCondition;
+    }
+    setConditionsState(newConditions);
+  };
+
+  const addCondition = (ruleIndex: number) => {
+    const newConditions = [...conditionsState];
+    newConditions[ruleIndex] = [
+      ...newConditions[ruleIndex],
+      {
+        nextTurn: Color.WHITE,
+        figureSelector: { color: Color.WHITE },
+        positionCondition: {
+          condition: 'row',
+          comparator: 'eq',
+          negative: false,
+          value: 0,
+        },
+      },
+    ];
+    setConditionsState(newConditions);
+  };
+
+  const removeCondition = (ruleIndex: number, conditionIndex: number) => {
+    const newConditions = [...conditionsState];
+    newConditions[ruleIndex] = [...newConditions[ruleIndex]];
+    newConditions[ruleIndex].splice(conditionIndex, 1);
+    if (!newConditions[ruleIndex].length) {
+      newConditions.splice(ruleIndex, 1);
+    }
+    setConditionsState(newConditions);
+  };
+
   return (
     <form className="level-build-condition-form" onSubmit={onFormSubmit}>
       <div className="form-content">
         {conditionsState.map((row, rowIndex) => (
           <div key={rowIndex} className="condition-row">
+            {!!rowIndex && <p className="or-condition">OR</p>}
             {row.map((condition, conditionIndex) => (
               <div key={conditionIndex} className="condition-cell">
-                - if
-                <select
-                  className="condition-turn-select"
-                  value={condition.nextTurn}
-                  onChange={(e) => {
-                    const newConditions = [...conditionsState];
-                    newConditions[rowIndex][conditionIndex].nextTurn = e.target
-                      .value as Color;
-                    setConditionsState(newConditions);
-                  }}
-                >
-                  <option value="white">on White&lsquo;s turn</option>
-                  <option value="black">on Black&lsquo;s turn</option>
-                </select>
-                a{' '}
-                <select
-                  className="condition-figure-role-select"
-                  value={condition.figureSelector.role ?? 'any'}
-                  onChange={(e) => {
-                    const newConditions = [...conditionsState];
-                    newConditions[rowIndex][conditionIndex].figureSelector.role =
-                      e.target.value === 'any' ? undefined : (e.target.value as Role);
-                    setConditionsState(newConditions);
-                  }}
-                >
-                  {Object.values(Role).map((role) => {
-                    return (
-                      <option key={role} value={role}>
-                        {role}
-                      </option>
-                    );
-                  })}
-                  <option value="any">any</option>
-                </select>
-                <select
-                  className="condition-figure-color-select"
-                  value={condition.figureSelector.color ?? 'any'}
-                  onChange={(e) => {
-                    const newConditions = [...conditionsState];
-                    newConditions[rowIndex][conditionIndex].figureSelector.color = e
-                      .target.value as Color;
-                    setConditionsState(newConditions);
-                  }}
-                >
-                  <option value="white">white</option>
-                  <option value="black">black</option>
-                </select>
-                figure{' '}
+                {!!conditionIndex && <p>--- AND ---</p>}
+                <div className="condition-head">
+                  <span>- if</span>
+                  <select
+                    className="condition-turn-select"
+                    value={condition.nextTurn}
+                    onChange={(e) => {
+                      const newConditions = [...conditionsState];
+                      newConditions[rowIndex][conditionIndex].nextTurn = e.target
+                        .value as Color;
+                      setConditionsState(newConditions);
+                    }}
+                  >
+                    <option value="white">on White&lsquo;s turn</option>
+                    <option value="black">on Black&lsquo;s turn</option>
+                  </select>
+                  <span>a</span>
+                  <select
+                    className="condition-figure-role-select"
+                    value={condition.figureSelector.role ?? 'any'}
+                    onChange={(e) => {
+                      const newConditions = [...conditionsState];
+                      newConditions[rowIndex][conditionIndex].figureSelector.role =
+                        e.target.value === 'any' ? undefined : (e.target.value as Role);
+                      setConditionsState(newConditions);
+                    }}
+                  >
+                    {Object.values(Role).map((role) => {
+                      return (
+                        <option key={role} value={role}>
+                          {role}
+                        </option>
+                      );
+                    })}
+                    <option value="any">any</option>
+                  </select>
+                  <select
+                    className="condition-figure-color-select"
+                    value={condition.figureSelector.color ?? 'any'}
+                    onChange={(e) => {
+                      const newConditions = [...conditionsState];
+                      newConditions[rowIndex][conditionIndex].figureSelector.color = e
+                        .target.value as Color;
+                      setConditionsState(newConditions);
+                    }}
+                  >
+                    <option value="white">white</option>
+                    <option value="black">black</option>
+                  </select>
+                  figure{' '}
+                </div>
                 <div className="condition-description">
                   <label>
                     <input
@@ -84,26 +151,14 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
                       className="position-condition-checkbox"
                       checked={!!condition.positionCondition}
                       onChange={(e) => {
-                        const newConditions = [...conditionsState];
-                        if (e.target.checked) {
-                          newConditions[rowIndex][conditionIndex].positionCondition = {
-                            condition: 'row',
-                            comparator: 'eq',
-                            negative: false,
-                            value: 0,
-                          };
-                        } else {
-                          delete newConditions[rowIndex][conditionIndex]
-                            .positionCondition;
-                        }
-                        setConditionsState(newConditions);
+                        togglePositionCondition(e, rowIndex, conditionIndex);
                       }}
                     />
-                    is on position{' '}
+                    is on position
                   </label>
                   {condition.positionCondition && (
                     <>
-                      where
+                      where{' '}
                       <select
                         className="pos-type-select"
                         value={condition.positionCondition.condition}
@@ -124,6 +179,7 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
                         <option value="row">row</option>
                         <option value="column">column</option>
                       </select>
+                      is{' '}
                       <label>
                         <input
                           type="checkbox"
@@ -139,7 +195,15 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
                             }
                           }}
                         />
-                        not
+                        <span
+                          className={
+                            !condition.positionCondition.negative
+                              ? 'unchecked'
+                              : undefined
+                          }
+                        >
+                          not
+                        </span>
                       </label>
                       <select
                         className="pos-comparator-select"
@@ -184,18 +248,10 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
                   <label>
                     <input
                       type="checkbox"
-                      className="position-condition-checkbox"
+                      className="attack-condition-checkbox"
                       checked={!!condition.attackCondition}
                       onChange={(e) => {
-                        const newConditions = [...conditionsState];
-                        if (e.target.checked) {
-                          newConditions[rowIndex][conditionIndex].attackCondition = {
-                            condition: 'attacked',
-                          };
-                        } else {
-                          delete newConditions[rowIndex][conditionIndex].attackCondition;
-                        }
-                        setConditionsState(newConditions);
+                        toggleAttackCondition(e, rowIndex, conditionIndex);
                       }}
                     />
                     is under attack
@@ -246,25 +302,20 @@ export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
                     </>
                   )} */}
                 </div>
-                <p>--- AND ---</p>
+                <button
+                  className="gapped-button remove-condition-button"
+                  type="button"
+                  onClick={() => removeCondition(rowIndex, conditionIndex)}
+                >
+                  Remove condition
+                </button>
               </div>
             ))}
             <button
               className="gapped-button"
               type="button"
               onClick={() => {
-                const newConditions = [...conditionsState];
-                newConditions[rowIndex].push({
-                  nextTurn: Color.WHITE,
-                  figureSelector: { color: Color.WHITE },
-                  positionCondition: {
-                    condition: 'row',
-                    comparator: 'eq',
-                    negative: false,
-                    value: 0,
-                  },
-                });
-                setConditionsState(newConditions);
+                addCondition(rowIndex);
               }}
             >
               Add condition
