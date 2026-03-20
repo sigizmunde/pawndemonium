@@ -24,15 +24,31 @@ export default function LevelBuildConditions({
 }: ConditionsProps) {
   const [tab, setTab] = useState<'accomplished' | 'failed' | 'extra'>('accomplished');
 
+  const [accomplishedChecksState, setAccomplishedChecksState] =
+    useState<ConditionFrame[][]>(accomplishedChecks);
+  const [failedChecksState, setFailedChecksState] =
+    useState<ConditionFrame[][]>(failedChecks);
+  const [extraChecksState, setExtraChecksState] = useState<
+    ConditionFrame[][] | undefined
+  >(extraChecks || undefined);
+
   const handleSubmit = (checks: ConditionFrame[][]) => {
-    if (tab === 'accomplished') {
-      onSetAccomplishedChecks(checks);
-    } else if (tab === 'failed') {
-      onSetFailedChecks(checks);
-    } else if (tab === 'extra' && onSetExtraChecks) {
-      onSetExtraChecks(checks);
+    onSetAccomplishedChecks(accomplishedChecksState);
+    onSetFailedChecks(failedChecksState);
+    if (extraChecksState && onSetExtraChecks) {
+      onSetExtraChecks(extraChecksState);
     }
     onClose();
+  };
+
+  const handleUpdateState = (checks: ConditionFrame[][]) => {
+    if (tab === 'accomplished') {
+      setAccomplishedChecksState(checks);
+    } else if (tab === 'failed') {
+      setFailedChecksState(checks);
+    } else if (tab === 'extra' && onSetExtraChecks) {
+      setExtraChecksState(checks);
+    }
   };
 
   return (
@@ -60,13 +76,14 @@ export default function LevelBuildConditions({
         )}
       </h3>
       <LevelBuildConditionsForm
-        conditions={
+        conditionsState={
           tab === 'accomplished'
-            ? accomplishedChecks
+            ? accomplishedChecksState
             : tab === 'failed'
-              ? failedChecks
-              : extraChecks || [[]]
+              ? failedChecksState
+              : extraChecksState || [[]]
         }
+        setConditionsState={handleUpdateState}
         onSubmit={handleSubmit}
         onCancel={onClose}
       />

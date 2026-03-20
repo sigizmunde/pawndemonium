@@ -1,21 +1,15 @@
-import { useEffect, useState } from 'react';
 import { AttackPrecursor, Color, ConditionFrame, PositionPrecursor, Role } from '@/types';
 import './levelBuildConditionsForm.scss';
 
 type ConditionsFormProps = {
-  conditions: ConditionFrame[][];
+  conditionsState: ConditionFrame[][];
+  setConditionsState: (conditions: ConditionFrame[][]) => any;
   onSubmit: (conditions: ConditionFrame[][]) => any;
   onCancel: () => any;
 };
 
 export default function LevelBuildConditionsForm(props: ConditionsFormProps) {
-  console.log('rendering conditions form with conditions', props.conditions);
-  const { conditions, onSubmit, onCancel } = props;
-  const [conditionsState, setConditionsState] = useState(conditions);
-
-  useEffect(() => {
-    setConditionsState(conditions);
-  }, [conditions]);
+  const { conditionsState, setConditionsState, onSubmit, onCancel } = props;
 
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
