@@ -1,10 +1,26 @@
 'use server';
 
+import { cookies } from 'next/headers';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { LevelConcept } from '@/types';
 import dbConnect from './db/connect';
 import Levels from './model/levels';
+
+function verifyIdToken(): JwtPayload {
+  const cookieStore = cookies();
+
+  const token = cookieStore.get('session')?.value;
+
+  if (!token) {
+    throw new Error('Unauthorized');
+  }
+
+  const payload = jwt.verify(token, process.env.JWT_SECRET || '') as JwtPayload;
+
+  return payload;
+}
 
 export async function getLevelsFromFile(id: string = ''): Promise<LevelConcept[]> {
   const filePath = path.resolve('files', `levels${id}.json`);
@@ -89,16 +105,30 @@ export async function writeLevelsToDB(
 }
 
 export async function getLevels(userEmail?: string): Promise<LevelConcept[]> {
-  console.log('getting levels', userEmail);
-  return userEmail ? readLevelsFromDB(userEmail) : getLevelsFromFile();
+  let email = userEmail;
+  try {
+    const payload = verifyIdToken();
+    email = payload.email;
+  } catch (error) {
+    console.log('no valid token found, falling back to file storage');
+  }
+  console.log('getting levels', email);
+  return email ? readLevelsFromDB(email) : getLevelsFromFile();
 }
 
 export async function writeLevels(params: {
-  userEmail?: string;
+  toFile?: boolean;
   levels: LevelConcept[];
 }): Promise<void> {
-  console.log('writing levels', params.userEmail);
-  params.userEmail
-    ? writeLevelsToDB(params.userEmail, params.levels)
-    : writeLevelsToFile(undefined, params.levels);
+  if (params.toFile) {
+    return writeLevelsToFile(undefined, params.levels);
+  }
+  try {
+    const payload = verifyIdToken();
+    const userEmail = payload.email;
+    console.log('writing levels', userEmail);
+    writeLevelsToDB(userEmail, params.levels);
+  } catch (error) {
+    console.log(error);
+  }
 }

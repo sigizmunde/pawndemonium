@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
+import { authenticateWithGoogle, logout } from '../../app/server/auth';
 import { UserContext } from '../userContext';
 import Modal from '../modal';
 import './login.scss';
@@ -10,16 +10,24 @@ export default function Login() {
   const { user, setUser } = useContext(UserContext);
   const isLoggedIn = !!user;
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
+    await logout();
     setUser(null);
   };
 
-  const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
+  const handleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     console.log(credentialResponse);
-    const credential = credentialResponse.credential!;
-    const decodedToken = jwtDecode(credential);
-    setUser(decodedToken);
-    setShowForm(false);
+    try {
+      const credential = credentialResponse.credential!;
+
+      const authUser = await authenticateWithGoogle(credential);
+
+      setUser(authUser);
+
+      setShowForm(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

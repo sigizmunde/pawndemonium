@@ -36,7 +36,7 @@ export default function Builder() {
   const handleSaveLevels = async () => {
     setSaving(true);
     try {
-      await writeLevels({ userEmail: user?.email, levels: levelConcepts });
+      await writeLevels({ levels: levelConcepts });
       setSaving(false);
     } catch (error) {
       console.log(error);

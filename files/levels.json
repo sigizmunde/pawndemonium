@@ -100,10 +100,61 @@
             3
           ]
         }
+      },
+      {
+        "id": "55dbb8ff-4312-401a-a322-a9af90f714e8",
+        "role": "pawn",
+        "color": "black",
+        "position": {
+          "board": "085c6b82-df61-4276-b02d-863538ff425e",
+          "cell": [
+            6,
+            4
+          ]
+        }
+      },
+      {
+        "id": "e8b664d9-0e96-4184-80d5-6b75c4d4eca7",
+        "role": "pawn",
+        "color": "black",
+        "position": {
+          "board": "085c6b82-df61-4276-b02d-863538ff425e",
+          "cell": [
+            7,
+            4
+          ]
+        }
       }
     ],
-    "accomplishedChecks": [],
-    "failedChecks": [],
+    "accomplishedChecks": [
+      [
+        {
+          "nextTurn": "white",
+          "figureSelector": {
+            "color": "black"
+          },
+          "positionCondition": {
+            "condition": "row",
+            "comparator": "eq",
+            "negative": false,
+            "value": 7
+          }
+        }
+      ]
+    ],
+    "failedChecks": [
+      [
+        {
+          "nextTurn": "white",
+          "figureSelector": {
+            "color": "black"
+          },
+          "attackCondition": {
+            "condition": "attacked"
+          }
+        }
+      ]
+    ],
     "allowSinglePlayer": true
   },
   {
